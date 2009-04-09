@@ -1,0 +1,7 @@
+= acts-as-hausdorff-space
+
+Description goes here.
+
+== Copyright
+
+Copyright (c) 2009 John Small. See LICENSE for details.
