@@ -5,7 +5,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "acts-as-hausdorff-space"
-    gem.summary = %Q{Use real numbers instead of integers for nested sets because real numbers are a Hausdorff space}
+    gem.summary = %Q{TODO}
     gem.email = "jds340@gmail.com"
     gem.homepage = "http://github.com/JohnSmall/acts-as-hausdorff-space"
     gem.authors = ["John Small"]
