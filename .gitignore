@@ -4,4 +4,6 @@ coverage
 rdoc
 pkg
 *.*~
+*.log
+*.db
 

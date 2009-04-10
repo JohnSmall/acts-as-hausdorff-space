@@ -1,0 +1,15 @@
+mysql:
+  :adapter: mysql
+  :host: localhost
+  :username: gem_test
+  :password: gem_test_password
+  :database: gem_test
+postgresql:
+  :adapter: postgresql
+  :host: localhost
+  :username: gem_test
+  :password: gem_test_password
+  :database: gem_test
+sqlite3:
+  :adapter: sqlite3
+  :dbfile: test/acts_as_hausdorff_space_gem_test.db

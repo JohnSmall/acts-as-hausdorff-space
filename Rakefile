@@ -17,10 +17,20 @@ rescue LoadError
 end
 
 require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/*_test.rb'
-  test.verbose = true
+#Rake::TestTask.new(:test) do |test|
+#  test.libs << 'lib' << 'test'
+#  test.pattern = 'test/**/*_test.rb'
+#  test.verbose = true
+#end
+
+desc 'Run tests on all database adapters. See README.'
+task :default => [:test_mysql, :test_sqlite3, :test_postgresql]
+for adapter in %w(mysql postgresql sqlite3)
+  Rake::TestTask.new("test_#{adapter}") do |t|
+    t.libs << 'lib'
+    t.pattern = "test/#{adapter}.rb"
+    t.verbose = true
+  end
 end
 
 begin
@@ -53,4 +63,6 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+
 
