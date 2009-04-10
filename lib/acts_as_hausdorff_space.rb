@@ -142,20 +142,28 @@ module MindoroMarine
      @prev_right = nil
     end
     
+    def left_col_name
+      self.class.left_col_name
+    end
+    
+    def right_col_name
+      self.class.right_col_name
+    end
+    
     def left_col_val
-       read_attribute(self.class.left_col_name)
+       read_attribute(left_col_name)
     end
     
     def left_col_val=(value)
-       write_attribute(self.class.left_col_name,value)
+       write_attribute(left_col_name,value)
     end  
     
     def right_col_val
-      read_attribute(self.class.right_col_name)
+      read_attribute(right_col_name)
     end
    
     def right_col_val=(value)
-       write_attribute(self.class.right_col_name,value)
+       write_attribute(right_col_name,value)
     end 
     
     def parent
@@ -186,9 +194,9 @@ module MindoroMarine
     begin
     # get all the children with levels counted and ordered in one SQL statement - this is what nested sets are all about 
     # then do a depth first traversal of all the entire list to build the tree in memory
-      child_list = self.class.find_by_sql("SELECT t1.*,(select count(*) from #{self.class.table_name} t2 where t2.lft<t1.lft and t2.rgt > t1.rgt) as depth from #{self.class.table_name} t1 where t1.lft >#{lft} and t1.rgt <#{rgt} order by lft desc")
+      child_list = self.class.find_by_sql("SELECT t1.*,(select count(*) from #{self.class.table_name} t2 where t2.#{left_col_name}<t1.#{left_col_name} and t2.#{right_col_name} > t1.#{right_col_name}) as depth from #{self.class.table_name} t1 where t1.#{left_col_name} >#{left_col_val} and t1.#{right_col_name} <#{right_col_val} order by #{left_col_name} desc")
       child_list.each{|r| r.in_tree = true}
-    #for some strange reason depth comes back as a string in Postgresql
+    #for some strange reason depth comes back as a string in Postgresql hence the .to_i
       build_tree_by_recursion(self,child_list.last.depth.to_i,child_list)
     rescue
     self.in_tree = false
@@ -233,16 +241,16 @@ end
 
 def my_root
   unless @root
-  @root = (self.class.find :first, :conditions => " #{self.lft} >= lft and #{self.rgt}<= rgt ",:order =>'lft') #between includes the end points
+  @root = (self.class.find :first, :conditions => " #{left_col_val} >= #{left_col_name} and #{right_col_val}<= #{right_col_name} ",:order =>"#{left_col_name}") #between includes the end points
   else
   @root
   end
 end
 
 def children    
-    unless ( @children.size>0 || ( lft == rgt ) || in_tree) # don't get children unless lft is not equal to rgt 
+    unless ( @children.size>0 || ( left_col_val == right_col_val ) || in_tree) # don't get children unless lft is not equal to rgt 
      # puts "load_tree = #{in_tree}"    
-      @children << self.class.find( :all,:conditions => " #{self.class.table_name}.lft >#{lft} and #{self.class.table_name}.rgt < #{rgt} and #{lft} = (select max(t1.lft) from #{self.class.table_name} t1 where #{self.class.table_name}.lft between t1.lft and t1.rgt)" )
+      @children << self.class.find( :all,:conditions => " #{self.class.table_name}.#{left_col_name} >#{left_col_val} and #{self.class.table_name}.#{right_col_name} < #{right_col_val} and #{left_col_val} = (select max(t1.#{left_col_name}) from #{self.class.table_name} t1 where #{self.class.table_name}.#{left_col_name} between t1.#{left_col_name} and t1.#{right_col_name})" )
    else
       @children
    end
@@ -268,14 +276,14 @@ end
 def after_save
   if @prev_left && @prev_right && @children.size > 0 # if we're moving from somewhere else
         @children.clear
-        scale = ((rgt-lft)/(@prev_right - @prev_left)).abs
+        scale = ((right_col_val-left_col_val)/(@prev_right - @prev_left)).abs
         old_mid_point = (@prev_right + @prev_left)/2
-        new_mid_point = (rgt+lft)/2
-        sql = "update #{self.class.table_name} t1 set t1.lft = ((t1.lft - #{old_mid_point})*#{scale})+#{new_mid_point}, t1.rgt = ((t1.rgt - #{old_mid_point})*#{scale})+#{new_mid_point} where t1.lft >#{@prev_left} and t1.rgt < #{@prev_right} "       
+        new_mid_point = (right_col_val+left_col_val)/2
+        sql = "update #{self.class.table_name} t1 set t1.#{left_col_name} = ((t1.#{left_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point}, t1.#{right_col_name} = ((t1.#{right_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point} where t1.#{left_col_name} >#{@prev_left} and t1.#{right_col_name} < #{@prev_right} "       
         connection.update_sql(sql)
         build_full_tree # get the children back
   else   
-        @children.each{|child| child.save if !(child.lft && child.rgt) } # save only the ones that need lft and rgt
+        @children.each{|child| child.save if !(child.left_col_val && child.right_col_val) } # save only the ones that need lft and rgt
   end
   @prev_left = @prev_right = nil  
 end
@@ -287,7 +295,7 @@ def siblings
 end
 
 def leaf_nodes
-  self.class.find :all,:conditions => " lft >#{lft} and rgt < #{rgt} and lft = rgt" 
+  self.class.find :all,:conditions => " #{left_col_name} >#{left_col_val} and #{right_col_name} < #{right_col_val} and #{left_col_name} = #{right_col_name}" 
 end
 
 def mid_point
@@ -295,19 +303,21 @@ def mid_point
 end
 
 def needs_moving
-   if lft && rgt && !in_tree
-    @prev_left = lft
-    self.lft = nil
-    @prev_right = rgt
-    self.rgt = nil
+   if left_col_val && right_col_val && !in_tree
+    @prev_left = left_col_val
+    self.left_col_val = nil
+    @prev_right = right_col_val
+    self.right_col_val = nil
    end  
-end  
-  
+end 
+ 
+=begin  
 def scale_and_translate(move_to_origin,scale_by,translate_by)
  self.lft = ((self.lft - move_to_origin)*scale_by) + translate_by
  self.lft = ((self.lft - move_to_origin)*scale_by) + translate_by
  children.each{|child| child.scale_and_translate(move_to_origin,scale_by,translate_by)}
 end
+=end
 
 private
 

@@ -6,7 +6,7 @@ require 'test/unit'
 require 'shoulda'
 
 class HausdorffSpaceTest < ActiveRecord::Base
-acts_as_hausdorff_space
+acts_as_hausdorff_space :left_column=>'left_col',:right_column=>'right_col'
 end
 
 
