@@ -2,6 +2,33 @@
 
 Description goes here.
 
+Scratching my own itch
+======================
+I was using the better_nested_set plugin in a territories model and trying to load all the countries in the world and all the regions and sub-regions
+and it was taking utterly ages. So I set about thinking what could be done to improve performance. I'd written the
+code for nested sets before a long time ago using Delphi & Interbase,  so I knew the problems. But in the meantime I'd
+learned some topology theory so I had a name and a concept to put to what must have been starting everyone in the face
+. Hausdorff Spaces! Integers aren't a Hausdorff space but we're trying to implement a concept, namely nested sets,
+which are the defining characteristic of a Hausdorff space, so we have to write extra code to fudge integers to behave
+like they are a Hausdorff space and that is the source of the performance hit. So the obvious thing to do is to use
+real numbers which are a Hausdorff space and then the extra code and associated performance hit melts away. After some
+fussing about the 0.1.0 version is now released, check the (link here) table to see how big the performance improvements
+can be.
+
+A bit of history
+================
+Joe Celko introduced the idea of nested sets for databases back in his article (link here). Since it's usually a bad
+idea to go against the advice of an SQL guru every implementation I've seen follows his example in using integers to
+set the nesting boundaries. So every implementation has had to deal with the awkwardness that comes with using integers
+in a way they can't inherently be used. 
+
+The basic idea
+==============
+
+A bit of topology theory
+========================
+
+
 == Copyright
 
 Copyright (c) 2009 John Small. See LICENSE for details.

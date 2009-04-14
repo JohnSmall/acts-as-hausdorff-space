@@ -108,16 +108,37 @@ context 'Instance Methods - Add a Root' do
    should 'count all leaf nodes ' do
     assert_equal 25,@hst.leaf_nodes.size,'error counting leaf nodes'
    end
+   
+   should 'move whole branches' do
+   @hst.children.first.children << @hst.children.last
+   read_root = HausdorffSpaceTest.full_tree
+   assert_equal 4,read_root.children.size
+   assert_equal 6,read_root.children.first.children.size
+   assert_equal 10,read_root.children.first.leaf_nodes.size 
+   end
+   
+   should 'get self and ancestors' do
+   
+   end
   end # context 'add many grandchildren' do
   
 end # context  'Instance Methods - Add a Root'    
 private ############################ PRIVATE ##########################################  
  def check_method_mixins(obj)
-   [:build_full_tree,:before_save,:siblings,:left_col_val,:right_col_val].each{|symbol| assert(obj.respond_to?(symbol),"instance method #{symbol} is missing")}
+   [:build_full_tree,
+    :before_save,
+    :siblings,
+    :left_col_val,
+    :right_col_val].each{|symbol| assert(obj.respond_to?(symbol),"instance method #{symbol} is missing")}
   end
   
   def check_class_method_mixins(klass)
-    [:root, :roots,:left_col_name,:right_col_name,:full_tree,:virtual_root].each do |symbol|
+    [:root, 
+     :roots,
+     :left_col_name,
+     :right_col_name,
+     :full_tree,
+     :virtual_root].each do |symbol|
     assert(klass.respond_to?(symbol),"class method #{symbol} is missing")
     end   
   end
