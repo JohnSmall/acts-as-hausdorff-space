@@ -1,9 +1,36 @@
-= acts-as-hausdorff-space
+== acts_as_hausdorff_space
 
-Description goes here.
+acts_as_hausdorff_space is a gemified mixin for Rails ActiveRecord. It implements the nested set model for maintaining recursive
+trees in a database, but using real numbers rather than integers because real numbers are a {Hausdorff Space}[http://en.wikipedia.org/wiki/Hausdorff_space]
+and the integers aren't
 
-Scratching my own itch
-======================
+== Caveats
+This version 0.1.0 is a proof of concept and a run through of all the github/lighthouse/google-group ecology of a gem. It works and 
+you're welcome to play with it and make comments, but don't trust it in production code just yet.
+ 
+== Installation 
+1. It's not a drop in replacement for acts_as_nested_set so watch out.
+2. Make sure you have http://gems.github.com set up in your gem sources
+3. sudo gem install acts-as-hausdorff-space
+4. In environment.rb add 
+   <tt> config.gem "acts-as-hausdorff-space"</tt>
+5. Create a migration with left and right columns using the biggest decimal representations available on your database.
+6. Add 
+    <tt> acts_as_hausdorff_space </tt> 
+   to your model.
+
+
+== Other references
+
+1. Source is at  git://github.com/JohnSmall/acts-as-hausdorff-space.git
+2. Wiki is at http://wiki.github.com/JohnSmall/acts-as-hausdorff-space
+3. Lighthouse bugtracking is at http://mindoro.lighthouseapp.com/projects/29279-acts_as_hausdorff_space/overview
+4. Google group for discussion is at http://groups.google.com/group/acts_as_hausdorff_space 
+5. I'm at {John Small}[http://www.mindoro-marine.co.uk] 
+
+
+== A Problem with Nested Sets - Mega Peformance Issues
+
 I was using the better_nested_set plugin in a territories model and trying to load all the countries in the world and all the regions and sub-regions
 and it was taking utterly ages. So I set about thinking what could be done to improve performance. I'd written the
 code for nested sets before a long time ago using Delphi & Interbase,  so I knew the problems. But in the meantime I'd
@@ -12,22 +39,145 @@ learned some topology theory so I had a name and a concept to put to what must h
 which are the defining characteristic of a Hausdorff space, so we have to write extra code to fudge integers to behave
 like they are a Hausdorff space and that is the source of the performance hit. So the obvious thing to do is to use
 real numbers which are a Hausdorff space and then the extra code and associated performance hit melts away. After some
-fussing about the 0.1.0 version is now released, check the (link here) table to see how big the performance improvements
-can be.
+fussing about version 0.1.0 is now released. For small trees the overhead of using BigDecimal rather than integers makes this
+method slower, but as the trees get bigger the relative performance soon switches in favour of using BigDecimals.
+check the  table at the bottom to see how big the performance improvements can be.
 
-A bit of history
-================
-Joe Celko introduced the idea of nested sets for databases back in his article (link here). Since it's usually a bad
-idea to go against the advice of an SQL guru every implementation I've seen follows his example in using integers to
+== A bit of history 
+
+Joe Celko, an SQL guru, popularized the idea of using nested sets for databases back in his 1996 article reproduced 
+{here}[http://www.dbmsmag.com/9603d06.html].
+Though the earliest description is in {Kamfonas}[http://www.kamfonas.com/id3.html].
+Since it's usually a bad idea to go against the advice of an SQL guru every implementation I've seen follows his example in using integers to
 set the nesting boundaries. So every implementation has had to deal with the awkwardness that comes with using integers
-in a way they can't inherently be used. 
+in a way they can't inherently be used. The description in {Kamfonas}[http://www.kamfonas.com/id3.html] recomends using a SKIP-VALUE
+to make sure you've got some space to put new entries in. Though the code for that is obviously going to be complicated because
+you'd need to work out a skip value for each node if you're adding a collection of nodes inside an already existing node. This is the
+kind of coding fudge people have to do to make nested sets maintainable.
 
-The basic idea
-==============
+== The Basic Idea
+This is copied from {ThreeBit}[http://threebit.net/tutorials/nestedset/tutorial1.html] and is the example used in
+better_nested_sets. The example uses integers.
 
-A bit of topology theory
-========================
+An easy way to visualize how a nested set works is to think of a parent entity surrounding all
+of its children, and its parent surrounding it, etc. So this tree:
+  root
+    |_ Child 1
+      |_ Child 1.1
+      |_ Child 1.2
+    |_ Child 2
+      |_ Child 2.1
+      |_ Child 2.2
 
+Could be visualized like this:
+    ___________________________________________________________________
+   |  Root                                                             |
+   |    ____________________________    ____________________________   |
+   |   |  Child 1                  |   |  Child 2                  |   |
+   |   |   __________   _________  |   |   __________   _________  |   |
+   |   |  |  C 1.1  |  |  C 1.2 |  |   |  |  C 2.1  |  |  C 2.2 |  |   |
+   1   2  3_________4  5________6  7   8  9_________10 11_______12 13  14
+   |   |___________________________|   |___________________________|   |
+   |___________________________________________________________________| 
+
+The numbers represent the left and right boundaries.  The table then might
+look like this:
+   id | parent_id | lft  | rgt  | data
+    1 |           |    1 |   14 | root
+    2 |         1 |    2 |    7 | Child 1
+    3 |         2 |    3 |    4 | Child 1.1
+    4 |         2 |    5 |    6 | Child 1.2
+    5 |         1 |    8 |   13 | Child 2
+    6 |         5 |    9 |   10 | Child 2.1
+    7 |         5 |   11 |   12 | Child 2.2
+
+To get all children of an entry +parent+, you
+    SELECT * WHERE lft IS BETWEEN parent.lft AND parent.rgt
+
+To get the number of children, it's 
+    (right - left - 1)/2
+
+To get a node and all its ancestors going back to the root, you
+    SELECT * WHERE node.lft IS BETWEEN lft AND rgt
+    
+== Notes.
+
+Pretty obviously if you wanted to add a new child with C.1.1 as parent you'll have to update the entire tree from 4 onwards
+because there is no integer between 3 and 4.    
+
+
+== A bit of topological theory
+
+There is no integer between 3 and 4, but there are an uncountable infinity of real numbers between 3 and 4. That is the crux of the problem.
+Between any two real numbers there is always another real number, no matter how close they are. This property was first described
+by Archimedes and it's called the {Archimedean property of real numbers}[http://en.wikipedia.org/wiki/Archimedean_property#Archimedean_property_of_the_real_numbers]
+
+What that means is that for real numbers we can surround any two of them with disjoint open neighbourhoods and that is the defining
+property of a {Hausdorff Space}[http://en.wikipedia.org/wiki/Hausdorff_space]. That property of being able to put any two points
+inside disjoint sets of nearby points means you can have infinite levels of nesting. The notion of nested sets is inherently part
+of a Hausdorff space, but not of the integers, which is why you have to write lots of awkward slow code to maintain nested sets implemented
+with integers
+
+== The Implementation in Abstract
+
+The implementation is the same as above, with two differences. I'm not using parent_id because that defeats the main advantage of the nested set model over the adjaceny list model
+and I'm using real numbers. That means if we want to add a record between 3 and 4, we can make lft = 3.25 and rgt = 3.5, and we
+can keep on adding records to any depth or width of tree we like, without having to update the rest of the tree.
+
+== The Real Life Implementation Constraints
+
+Computers don't use real numbers, they use binary arithmetic to emulate real numbers. That means the lovely idea has
+to get ugly when it meets the real world. There are maximum sizes for the real numbers used and also minimum sizes depending
+on the real number precision limits. But within those constraints we can implement the concept of nested sets using real numbers 
+fairly easily. We just have to keep our calculations away from bumping up against the lower and upper limits. It means that
+there's going to be a limit to the number of children a parent node can own, and also a limit to the depth of the tree. Most trees
+used in nested sets in relational databases aren't very deep, but they can be very wide. When we add a new node into a gap in
+the tree we have to make sure it leaves a gap between itself and its siblings or the parent lefts and rights. That way we will
+always have some space to put a new record in the gap, as long as the gap isn't so small that we're bumping up against the limits
+of decimal precision. So when you set up your tables always choose the maximum precision for that database.
+
+The other issue when we add a new record, we want to leave space for more records but we don't know in advance how many
+records to leave space for. We could do what's done in the integer implementations of nested sets, move every lft and rgt along
+a bit, but that is where the performance hit comes from. So we have to leave gaps and fill them as best we can. If each new node 
+were to take up half of the remaining space between its siblings and the boundaries
+of its parent, then we'd pretty soon bump up against the decimal precision limit. To avoid that I've set things up so that there's
+a number called the #bias, which is a division factor. It works like this, I add a new child to a parent, I use the bias
+to work out where to place the child inside what ever gap remains, roughly (remaining gap)/bias. So the bigger the bias the less
+of the remaining gap is taken up. The default bias is one million, to allow for wide and shallow trees. 
+
+== Implementation Details
+see 
+
+== Relative Performance 
+
+For small trees integers are faster, for large trees acts_as_hausdorff_space using BigDecimals are faster by a large margin. To get a rough estimate of
+performance I wrote a test which adds 1000 children to a root node, then goes through each child node adding children. This really
+hammers the integer implementation of nested sets since every new insertion requires updating every node to the right of the new
+insertion. The full test description and updated results are {here}[http://mindoro-marine.co.uk/nested_sets_tests].
+
+No. of children added is the number of child nodes added to each of the 1000 children of the root. aahs = acts_as_hausdorff_space,
+bns = using the better_nested_set mixin.
+
+              |      SQLite3       |          MySQL           |
+  No of       | aahs    | bns      | aahs       | bns         |
+  children
+  added  
+  0           | 28 secs | 15 secs  | 28 secs    | 9 secs      |
+  1           | 39      | 55       | 40         | 150         |
+  2           | 51      | 116      | 51         | 7,692       |
+  3           | 62      | 203      | 63         | 24,555      |
+  4           | 73      | 312      | 75         | I gave up   |
+  5           | 84      | 444      | 87         |             |
+  6           | 96      | 596      | 99         |             |
+  7           | 109     | 765      | 113        |             |
+  8           | 121     | 952      | 129        |             |
+  9           | 131     | 1156     | 144        |             |
+
+As you can see adding children into large trees using acts_as_hausdorff_space (aahs) is nice and linear in the number
+of children added. Using the integer method implemented by better_nested_set things are much slower 
+and on MySQL the time taken blows up quite quickly. 
+
+I'll be testing Postgres and trying to work out why MySQL blows up so badly. 
 
 == Copyright
 

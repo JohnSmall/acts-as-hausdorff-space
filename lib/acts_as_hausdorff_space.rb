@@ -11,8 +11,10 @@ module MindoroMarine
         # * +left_column+ - Column name for the left index (default: +lft+). 
         # * +right_column+ - Column name for the right index (default: +rgt+). NOTE: 
         #   Don't use +left+ and +right+, since these are reserved database words.        
-        #   (if it isn't there already) and use that as the foreign key restriction. It's also possible 
-        #   to give it an entire string that is interpolated if you need a tighter scope than just a foreign key.
+        # * +bias+ - A divisor used to calculate where in a gap a new record should go. Bigger numbers are preferred for wide shallow trees
+        #   Default is 1E6
+        # * +max_double+ - This is the outer left and right boundaries of all the trees. Set it according to the precision and scale you're
+        #  using in your database columns. Default is 1E20
         def acts_as_hausdorff_space(options = {}) 
         #[TODO] use reverse merge here
         write_inheritable_attribute(:acts_as_hausdorff_space_options,
@@ -32,7 +34,6 @@ module MindoroMarine
           end
         end
     end  
-    # little things we need
     
     # Each branch has branches and/or leaves and gaps to put new things in
     # A gap has attributes left_col_val and right_col_val 
@@ -41,11 +42,14 @@ module MindoroMarine
     end   
     
     # An instance of VirtualRoot is a hidden root that "owns" the actual roots. It's only here so we can use the same code for
-    # real roots and children. Otherwise we have to write special code for the top level parents
-    
+    # real roots and children. Otherwise we have to write special code for the top level parents.
+    # Note: This is very different from the concept of virtual roots in better_nested_set which is the equivalent of <Klass>.root.children
+    # to get the immediate children of a top level root    
     class VirtualRoot
     attr_accessor :left_col_val,:right_col_val
     attr_reader :children
+    
+    # initialize with a left and right value that will be the bounds of the entire tree of all the roots
     def initialize( left_val,right_val)
      self.left_col_val = left_val
      self.right_col_val = right_val
@@ -55,21 +59,22 @@ module MindoroMarine
     
     end #VirtualRoot
     
-     # We need an array to hold children. Because we want to be able to write parent.children << SomeModel.new
-    # then we need to do special stuff in "<<" but we don't want to mixin into Array because that might (almost certainly would)
-    # mess up other code, so we'll get very javary and subclass Array
+    # We need an array to hold children, but because we don't use parent_id we can't return the children as an AR has_many association
+    # Therefore we use an array.  Because we want to be able to write 
+    # <tt>parent.children << SomeModel.new</tt>
+    # then we need to do special stuff in "<<". But we don't want to mixin into Array because that might (almost certainly would)
+    # mess up other code, so we'll get very Java-like and subclass Array
     class HSArray < Array
     attr_accessor :parent
     
+        # subclass << to set the parent on the new items being added
         def <<(elem)
         if elem.is_a?(Array) # if it is an array then load each item into the HSArray in turn
          elem.each do |item| 
-         #puts "each item #{elem.class.name} item #{item.class.name}"
          self << item
          end
         else
          super  
-         #puts "add one #{elem.class.name}"
          elem.parent = self.parent if self.parent && elem.respond_to?('parent') 
         end         
        end #<<(elem) 
@@ -78,7 +83,9 @@ module MindoroMarine
    
     module ClassMethods
         
-        
+    # Get all the top level roots. This does a find of all records with no immediate parent in the database. 
+    # When they're loaded they get a virtual root attached as their parent. This is to make sure that every node has a parent which helps to
+    # generalise and simplify the code for working out left and right boundaries.    
     def roots
      top_levels =    self.find( :all, :conditions => "not exists (select t1.id from #{self.table_name} t1
                                                                        where t1.#{left_col_name} <#{self.table_name}.#{left_col_name} 
@@ -95,31 +102,35 @@ module MindoroMarine
      end
      end 
     end
-    
+    # get the first root from roots
     def root
         roots.first
     end
-    
+    # use the instance method <tt>build_full_tree</tt> on the root to get all the children set up in a tree
     def full_tree
       root.build_full_tree
     end
-    
+ 
+    # Return the left column name. Either the one supplied in the options to acts_as_hausdorff_space or the default "lft"
     def left_col_name
         acts_as_hausdorff_space_options[:left_column]
     end
     
+    # Return the right column name. Either the one supplied in the options to acts_as_hausdorff_space or the default "rgt"
     def right_col_name
         acts_as_hausdorff_space_options[:right_column]
     end
     
+    # Return the max_double supplied in the options to to acts_as_hausdorff_space or the default 1E20
     def max_double
       acts_as_hausdorff_space_options[:max_double]
     end
     
+     # Return the bias supplied in the options to to acts_as_hausdorff_space or the default 1E6
     def bias
       acts_as_hausdorff_space_options[:bias]
     end
-    
+    # Return the virtual root. This is an in memory only parent to all the roots, the left is set to -max_double and the right to max_double
     def virtual_root 
      acts_as_hausdorff_space_options[:virtual_root]
     end
@@ -130,8 +141,8 @@ module MindoroMarine
     module InstanceMethods
     attr_accessor :parent,:in_tree
     
-    
-    def after_initialize # initialize isn't always called
+    # initialize isn't always called so we can't do this in initialize. This sets up things we need to hold the tree together 
+    def after_initialize 
      @parent = nil    
      @children = HSArray.new
      @children.parent = self
@@ -142,30 +153,41 @@ module MindoroMarine
      @prev_right = nil
     end
     
+    # Short hand method to save typing self.class.left_col_name
     def left_col_name
       self.class.left_col_name
     end
     
+    # Short hand method to save typing self.class.right_col_name
     def right_col_name
       self.class.right_col_name
     end
     
+    # get the left col value
     def left_col_val
        read_attribute(left_col_name)
     end
     
+    # set the left col value
     def left_col_val=(value)
        write_attribute(left_col_name,value)
     end  
     
+    # get the right col value
     def right_col_val
       read_attribute(right_col_name)
     end
-   
+    
+    # set the right col value
     def right_col_val=(value)
        write_attribute(right_col_name,value)
     end 
     
+    # Get the parent.
+    # If the parent hasn't already been set, and if we're not building the full tree (which sets parents) and if we've
+    # got a valid lft and right then construct the SQL to get the parent from the DB. If none is found then it's a root so
+    # set the parent to be the class.virtual_root
+    # If the parent is already set then don't go to the database to look for it, just return it
     def parent
      if !in_tree && left_col_val && right_col_val && !@parent # only get the parent by SQL if we don't know what it is
      @parent = self.class.find :first, :conditions => " #{left_col_val} > #{self.class.left_col_name} and #{left_col_val} < #{self.class.right_col_name} ",:order =>'#{self.class.left_col_name} DESC'
@@ -178,10 +200,12 @@ module MindoroMarine
      end
     end
     
+    # set a new parent. This will save the parent, which will force a save of this child after the parent has had its lft and rgt set
+    # If we're loading a full tree, we don't save the parent and child as that would be daft
     def parent=(new_parent)
      if @parent != new_parent
         @parent = new_parent
-        needs_moving
+        needs_moving!
         @is_root  = @parent.is_a?(VirtualRoot) 
      end  
      # [TODO] clean this up with parent.save_children  
@@ -189,6 +213,9 @@ module MindoroMarine
      return @parent
     end
     
+    # sets the in_tree flag, pulls in all the children of this record with the level set correctly and ordered by lft.
+    # Then it executes a private method which does a depth first recursion of the returned dataset to build the tree.
+    # Returns this record as the root of the tree
     def build_full_tree
     self.in_tree = true
     begin
@@ -205,6 +232,7 @@ module MindoroMarine
     return self  
 end
 
+# get the gap on the left of this record
 def lft_gap
  # puts " in lft gap #{parent.class.name}"
   gap = Gap.new
@@ -220,6 +248,7 @@ def lft_gap
  return gap 
 end
 
+# get the gap on the right of this record
 def rgt_gap
 # puts " in rgt gap #{parent.class.name}"
  gap = Gap.new
@@ -235,10 +264,13 @@ def rgt_gap
  return gap
 end # rgt_gap
 
+# is this record a root
 def is_root?
   @is_root
 end
 
+# find the root that owns this record. This is called "my_root" rather than "root" so you don't mix it up with <class>.root
+# This is different to how it's done in acts_as_nested_set
 def my_root
   unless @root
   @root = (self.class.find :first, :conditions => " #{left_col_val} >= #{left_col_name} and #{right_col_val}<= #{right_col_name} ",:order =>"#{left_col_name}") #between includes the end points
@@ -247,6 +279,10 @@ def my_root
   end
 end
 
+# Find the immediate children of this record. If the children have already been loaded before either via build_full_tree or
+# a previous call to children then this just returns what was previously loaded. Otherwise it goes to the database.
+# The sql is a bit more involved than used in acts_as_nested_set because this is a pure nested set model and there's no parent_id
+# Because we're not using parent_id the returned array is not an AR associattion, unlike acts_as_nested_set. You have been warned.
 def children    
     unless ( @children.size>0 || ( left_col_val == right_col_val ) || in_tree) # don't get children unless lft is not equal to rgt 
      # puts "load_tree = #{in_tree}"    
@@ -256,6 +292,11 @@ def children
    end
 end
 
+# Where most of the clever action happens.
+# 1. If there's no parent then set the <class>.virtual_root to be the parent before continuing
+# 2. Find the left boundary and the right boundary from the parent or the siblings or both
+# 3. If this record has no children then set lft=rgt and put it well on the left of the gap
+# 4. If there are children then set the lft and rgt to a comfortable size to hold the children
 def before_save
  if !@parent
    self.class.roots # this loads virtual_root with roots
@@ -273,6 +314,12 @@ gap = far_right - far_left
   end
 end
 
+# Where most of the remaining action happens
+# If we've moved the record into a new parent from somewhere else then we need to update the old child records
+# to bring those into place. This requires a scaling, to fit into the new gap, and a translation to move into the corrent place
+# The code works out the values required for a single SQL statement that pulls the entire branch across
+#
+# If we haven't moved from elsewhere then save each child that needs saving
 def after_save
   if @prev_left && @prev_right && @children.size > 0 # if we're moving from somewhere else
         @children.clear
@@ -288,21 +335,41 @@ def after_save
   @prev_left = @prev_right = nil  
 end
 
+# get the siblings. All immediate children of the parent minus self
 def siblings
   if parent
-   parent.children.reject{|r| r == self}
+   self_and_siblings.reject{|r| r == self}
   end
 end
 
+# get all children of the parent of this record
+def self_and_siblings
+ if parent
+   parent.children
+  end
+end
+# get the line of owners with the root first 
+def self_and_ancestors
+  self.class.find :all, :conditions =>"#{left_col_name} <= #{left_col_val} and #{right_col_name} >= #{right_col_val} ",:order=>"#{left_col_name}"
+end
+
+# self_and_ancestors with self removed
+def ancestors
+ self_and_ancestors.reject{|r| r == self}
+end
+
+# find all children at any depth with lft=rgt
 def leaf_nodes
   self.class.find :all,:conditions => " #{left_col_name} >#{left_col_val} and #{right_col_name} < #{right_col_val} and #{left_col_name} = #{right_col_name}" 
 end
 
+# find the mid point of the gap this record fits in
 def mid_point
    (furthrest_left+furthrest_right)/2
 end
 
-def needs_moving
+# if the record needs moving then save the old lft and rgt and set the current lft and rgt to nil
+def needs_moving!
    if left_col_val && right_col_val && !in_tree
     @prev_left = left_col_val
     self.left_col_val = nil

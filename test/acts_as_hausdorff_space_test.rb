@@ -118,8 +118,33 @@ context 'Instance Methods - Add a Root' do
    end
    
    should 'get self and ancestors' do
-   
+   saa = @hst.children.first.children.first.self_and_ancestors
+   assert_equal 3, saa.size, 'There should be three records'
+   assert_equal @hst,saa[0], 'The first ancestor should be the top level owner'
+   assert_equal @hst.children.first, saa[1],'The second ancestor should be child of the top level '
+   assert_equal @hst.children.first.children.first, saa[2],'The third ancestor should be this record'
    end
+   
+   should 'get only ancestors' do
+   a = @hst.children.first.children.first.ancestors
+   assert_equal 2, a.size, 'There should be two records'
+   assert !a.include?(@hst.children.first.children.first),' this record should not be in the array'
+   end
+   
+   should 'get self and siblings' do
+   sas = @hst.children.first.children.first.self_and_siblings
+   assert_equal 5,sas.size, 'There should be five records in self and siblings'
+   sas.each do |rec|
+     assert_equal @hst.children.first,rec.parent,'each sibling must have the same parent'
+   end
+   end
+   
+   should 'get only siblings' do
+   s = @hst.children.first.children.first.siblings
+   assert_equal 4,s.size, 'There should be four records in siblings'
+   assert !s.include?(@hst.children.first.children.first),'This record should not be in the array of siblings'
+   end
+   
   end # context 'add many grandchildren' do
   
 end # context  'Instance Methods - Add a Root'    

@@ -23,7 +23,7 @@ require 'rake/testtask'
 #  test.verbose = true
 #end
 
-desc 'Run tests on all database adapters. See README.'
+desc 'Run tests on all database adapters.'
 task :default => [:test_mysql, :test_sqlite3, :test_postgresql]
 for adapter in %w(mysql postgresql sqlite3)
   Rake::TestTask.new("test_#{adapter}") do |t|
@@ -46,7 +46,6 @@ rescue LoadError
   end
 end
 
-
 task :default => :test
 
 require 'rake/rdoctask'
@@ -57,10 +56,9 @@ Rake::RDocTask.new do |rdoc|
   else
     version = ""
   end
-
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "acts-as-hausdorff-space #{version}"
-  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('*.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
