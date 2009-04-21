@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>File: README.rdoc [RDoc Documentation]</title>
+
+	<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet" />
+
+	<script src="./js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+</head>
+
+<body class="file">
+  <div id="metadata">
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="./LICENSE.html">LICENSE</a></li>
+				
+					<li class="file"><a href="./README_rdoc.html">README.rdoc</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="./images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="./MindoroMarine.html">MindoroMarine</a></li>
+				
+					<li><a href="./MindoroMarine/Acts/HausdorffSpace/ActMethods.html">MindoroMarine::Acts::HausdorffSpace::ActMethods</a></li>
+				
+					<li><a href="./MindoroMarine/Acts/HausdorffSpace/ClassMethods.html">MindoroMarine::Acts::HausdorffSpace::ClassMethods</a></li>
+				
+					<li><a href="./MindoroMarine/Acts/HausdorffSpace/Gap.html">MindoroMarine::Acts::HausdorffSpace::Gap</a></li>
+				
+					<li><a href="./MindoroMarine/Acts/HausdorffSpace/HSArray.html">MindoroMarine::Acts::HausdorffSpace::HSArray</a></li>
+				
+					<li><a href="./MindoroMarine/Acts/HausdorffSpace/InstanceMethods.html">MindoroMarine::Acts::HausdorffSpace::InstanceMethods</a></li>
+				
+					<li><a href="./MindoroMarine/Acts/HausdorffSpace/VirtualRoot.html">MindoroMarine::Acts::HausdorffSpace::VirtualRoot</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<p>
+<h2>acts_as_hausdorff_space</h2>
+</p>
+<p>
+acts_as_hausdorff_space is a gemified mixin for Rails ActiveRecord. It
+implements the nested set model for maintaining recursive trees in a
+database, but using real numbers rather than integers because real numbers
+are a <a href="http://en.wikipedia.org/wiki/Hausdorff_space">Hausdorff
+Space</a> and the integers aren&#8217;t
+</p>
+<p>
+<h2> Installation </h2>
+</p>
+<ol>
+<li>Make sure you have <a href="http://gems.github.com">gems.github.com</a> set
+up in your gem sources
+
+</li>
+<li>sudo gem install acts-as-hausdorff-space
+
+</li>
+<li>In environment.rb add <tt> config.gem
+&quot;acts-as-hausdorff-space&quot;</tt>
+
+</li>
+<li>Create a migration with left and right columns using the biggest decimal
+representations available on your database.
+
+</li>
+<li>Add
+
+<pre>
+ &lt;tt&gt; acts_as_hausdorff_space &lt;/tt&gt;
+</pre>
+</li>
+</ol>
+<p>
+to your model.
+</p>
+<ol>
+<li>It&#8217;s not a drop in replacement for acts_as_nested_set so watch out.
+
+</li>
+</ol>
+<p>
+Other references
+</p>
+<ol>
+<li>Source is at git@github.com:JohnSmall/acts-as-hausdorff-space.git
+
+</li>
+<li>Wiki is at
+
+</li>
+<li>Lighthouse bugtracking is at
+
+</li>
+<li>Google group for discussion is at <a
+href="http://groups.google.com/group/acts_as_hausdorff_space">groups.google.com/group/acts_as_hausdorff_space</a>
+
+</li>
+<li>I&#8217;m at <a href="http://mindoro-marine.co.uk">John Small</a>
+
+</li>
+</ol>
+<p>
+<h2>A Problem with Nested Sets - Mega Peformance Issues</h2>
+</p>
+<p>
+I was using the better_nested_set plugin in a territories model and trying
+to load all the countries in the world and all the regions and sub-regions
+and it was taking utterly ages. So I set about thinking what could be done
+to improve performance. I&#8217;d written the code for nested sets before a
+long time ago using Delphi &amp; Interbase, so I knew the problems. But in
+the meantime I&#8217;d learned some topology theory so I had a name and a
+concept to put to what must have been starting everyone in the face .
+Hausdorff Spaces! Integers aren&#8217;t a Hausdorff space but we&#8217;re
+trying to implement a concept, namely nested sets, which are the defining
+characteristic of a Hausdorff space, so we have to write extra code to
+fudge integers to behave like they are a Hausdorff space and that is the
+source of the performance hit. So the obvious thing to do is to use real
+numbers which are a Hausdorff space and then the extra code and associated
+performance hit melts away. After some fussing about version 0.1.0 is now
+released. For small trees the overhead of using BigDecimal rather than
+integers makes this method slower, but as the trees get bigger the relative
+performance soon switches in favour of using BigDecimals. check the table
+at the bottom to see how big the performance improvements can be.
+</p>
+<p>
+<h2>A bit of history</h2>
+</p>
+<p>
+Joe Celko, an SQL guru, popularized the idea of using nested sets for
+databases back in his 1996 article reproduced <a
+href="http://www.dbmsmag.com/9603d06.html">here</a>. Though the earliest
+description is in <a href="http://www.kamfonas.com/id3.html">Kamfonas</a>.
+Since it&#8217;s usually a bad idea to go against the advice of an SQL guru
+every implementation I&#8217;ve seen follows his example in using integers
+to set the nesting boundaries. So every implementation has had to deal with
+the awkwardness that comes with using integers in a way they can&#8217;t
+inherently be used. The description in <a
+href="http://www.kamfonas.com/id3.html">Kamfonas</a> recomends using a
+SKIP-VALUE to make sure you&#8217;ve got some space to put new entries in.
+Though the code for that is obviously going to be complicated because
+you&#8217;d need to work out a skip value for each node if you&#8217;re
+adding a collection of nodes inside an already existing node. This is the
+kind of coding fudge people have to do to make nested sets maintainable.
+</p>
+<p>
+<h2>The Basic Idea</h2> This is copied from <a
+href="http://threebit.net/tutorials/nestedset/tutorial1.html">ThreeBit</a>
+and is the example used in better_nested_sets. The example uses integers.
+</p>
+<p>
+An easy way to visualize how a nested set works is to think of a parent
+entity surrounding all of its children, and its parent surrounding it, etc.
+So this tree:
+</p>
+<pre>
+  root
+    |_ Child 1
+      |_ Child 1.1
+      |_ Child 1.2
+    |_ Child 2
+      |_ Child 2.1
+      |_ Child 2.2
+</pre>
+<p>
+Could be visualized like this:
+</p>
+<pre>
+    ___________________________________________________________________
+   |  Root                                                             |
+   |    ____________________________    ____________________________   |
+   |   |  Child 1                  |   |  Child 2                  |   |
+   |   |   __________   _________  |   |   __________   _________  |   |
+   |   |  |  C 1.1  |  |  C 1.2 |  |   |  |  C 2.1  |  |  C 2.2 |  |   |
+   1   2  3_________4  5________6  7   8  9_________10 11_______12 13  14
+   |   |___________________________|   |___________________________|   |
+   |___________________________________________________________________|
+</pre>
+<p>
+The numbers represent the left and right boundaries. The table then might
+look like this:
+</p>
+<pre>
+   id | parent_id | lft  | rgt  | data
+    1 |           |    1 |   14 | root
+    2 |         1 |    2 |    7 | Child 1
+    3 |         2 |    3 |    4 | Child 1.1
+    4 |         2 |    5 |    6 | Child 1.2
+    5 |         1 |    8 |   13 | Child 2
+    6 |         5 |    9 |   10 | Child 2.1
+    7 |         5 |   11 |   12 | Child 2.2
+</pre>
+<p>
+To get all children of an entry <tt>parent</tt>, you
+</p>
+<pre>
+    SELECT * WHERE lft IS BETWEEN parent.lft AND parent.rgt
+</pre>
+<p>
+To get the number of children, it&#8217;s
+</p>
+<pre>
+    (right - left - 1)/2
+</pre>
+<p>
+To get a node and all its ancestors going back to the root, you
+</p>
+<pre>
+    SELECT * WHERE node.lft IS BETWEEN lft AND rgt
+</pre>
+<h4></h4>
+<p>
+Notes. Pretty obviously if you wanted to add a new child with C.1.1 as
+parent you&#8217;ll have to update the entire tree from 4 onwards because
+there is no integer between 3 and 4.
+</p>
+<p>
+<h2>A bit of topological theory</h2>
+</p>
+<p>
+There is no integer between 3 and 4, but there are an uncountable infinity
+of real numbers between 3 and 4. That is the crux of the problem. Between
+any two real numbers there is always another real number, no matter how
+close they are. This property was first described by Archimedes and
+it&#8217;s called the <a
+href="http://en.wikipedia.org/wiki/Archimedean_property#Archimedean_property_of_the_real_numbers">Archimedean
+property of real numbers</a>
+</p>
+<p>
+What that means is that for real numbers we can surround any two of them
+with disjoint open neighbourhoods and that is the defining property of a <a
+href="http://en.wikipedia.org/wiki/Hausdorff_space">Hausdorff Space</a>.
+That property of being able to put any two points inside disjoint sets of
+nearby points means you can have infinite levels of nesting. The notion of
+nested sets is inherently part of a Hausdorff space, but not of the
+integers, which is why you have to write lots of awkward slow code to
+maintain nested sets implemented with integers
+</p>
+<p>
+<h2>The Implementation in Abstract</h2>
+</p>
+<p>
+The implementation is the same as above, with two differences. I&#8217;m
+not using parent_id because that defeats the main advantage of the nested
+set model over the adjaceny list model and I&#8217;m using real numbers.
+That means if we want to add a record between 3 and 4, we can make lft =
+3.25 and rgt = 3.5, and we can keep on adding records to any depth or width
+of tree we like, without having to update the rest of the tree.
+</p>
+<p>
+<h2>The Real Life Implementation Constraints</h2>
+</p>
+<p>
+Computers don&#8217;t use real numbers, they use binary arithmetic to
+emulate real numbers. That means the lovely idea has to get ugly when it
+meets the real world. There are maximum sizes for the real numbers used and
+also minimum sizes depending on the real number precision limits. But
+within those constraints we can implement the concept of nested sets using
+real numbers fairly easily. We just have to keep our calculations away from
+bumping up against the lower and upper limits. It means that there&#8217;s
+going to be a limit to the number of children a parent node can own, and
+also a limit to the depth of the tree. Most trees used in nested sets in
+relational databases aren&#8217;t very deep, but they can be very wide.
+When we add a new node into a gap in the tree we have to make sure it
+leaves a gap between itself and its siblings or the parent lefts and
+rights. That way we will always have some space to put a new record in the
+gap, as long as the gap isn&#8217;t so small that we&#8217;re bumping up
+against the limits of decimal precision. So when you set up your tables
+always choose the maximum precision for that database.
+</p>
+<p>
+The other issue when we add a new record, we want to leave space for more
+records but we don&#8217;t know in advance how many records to leave space
+for. We could do what&#8217;s done in the integer implementations of nested
+sets, move every lft and rgt along a bit, but that is where the performance
+hit comes from. So we have to leave gaps and fill them as best we can. If
+each new node were to take up half of the remaining space between its
+siblings and the boundaries of its parent, then we&#8217;d pretty soon bump
+up against the decimal precision limit. To avoid that I&#8217;ve set things
+up so that there&#8217;s a number called the bias, which is a division
+factor. It works like this, I add a new child to a parent, I use the bias
+to work out where to place the child inside what ever gap remains, roughly
+(remaining gap)/bias. So the bigger the bias the less of the remaining gap
+is taken up. The default bias is one million, to allow for wide and shallow
+trees.
+</p>
+<p>
+<h2> Relative Performance </h2>
+</p>
+<p>
+For small trees integers are faster, for large trees
+acts_as_hausdorff_space using BigDecimals are faster by a large margin. To
+get a rough estimate of performance I wrote a test which adds 1000 children
+to a root node, then goes through each child node adding children. This
+really hammers the integer implementation of nested sets since every new
+insertion requires updating every node to the right of the new insertion.
+The full test description and updated results are <a
+href="http://mindoro-marine.co.uk/nested_sets_tests">here</a>.
+</p>
+<p>
+No. of children added is the number of child nodes added to each of the
+1000 children of the root. aahs = acts_as_hausdorff_space, bns = using the
+better_nested_set mixin.
+</p>
+<pre>
+              |      SQLite3       |          MySQL           |
+  No of       | aahs    | bns      | aahs       | bns         |
+  children
+  added
+  0           | 28 secs | 15 secs  | 28 secs    | 9 secs      |
+  1           | 39      | 55       | 40         | 150         |
+  2           | 51      | 116      | 51         | 7,692       |
+  3           | 62      | 203      | 63         | 24,555      |
+  4           | 73      | 312      | 75         | I gave up   |
+  5           | 84      | 444      | 87         |             |
+  6           | 96      | 596      | 99         |             |
+  7           | 109     | 765      | 113        |             |
+  8           | 121     | 952      | 129        |             |
+  9           | 131     | 1156     | 144        |             |
+</pre>
+<p>
+As you can see adding children into large trees using
+acts_as_hausdorff_space (aahs) is nice and linear in the number of children
+added. Using the integer method implemented by better_nested_set things are
+much slower and on MySQL the time taken blows up quite quickly.
+</p>
+<p>
+I&#8217;ll be testing Postgres and trying to work out why MySQL blows up so
+badly.
+</p>
+<h2>Copyright</h2>
+<p>
+Copyright &#169; 2009 John Small. See <a href="LICENSE.html">LICENSE</a>
+for details.
+</p>
+
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,1152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Module: MindoroMarine::Acts::HausdorffSpace::InstanceMethods</title>
+
+	<link rel="stylesheet" href="../../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="module">
+
+	<div id="metadata">
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../../lib/acts_as_hausdorff_space.rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/acts_as_hausdorff_space.rb">lib/acts_as_hausdorff_space.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#M000011">#after_initialize</a></li>
+					
+					<li><a href="#M000027">#after_save</a></li>
+					
+					<li><a href="#M000026">#before_save</a></li>
+					
+					<li><a href="#M000020">#build_full_tree</a></li>
+					
+					<li><a href="#M000034">#build_tree_by_recursion</a></li>
+					
+					<li><a href="#M000025">#children</a></li>
+					
+					<li><a href="#M000032">#furthrest_left</a></li>
+					
+					<li><a href="#M000033">#furthrest_right</a></li>
+					
+					<li><a href="#M000023">#is_root?</a></li>
+					
+					<li><a href="#M000029">#leaf_nodes</a></li>
+					
+					<li><a href="#M000012">#left_col_name</a></li>
+					
+					<li><a href="#M000014">#left_col_val</a></li>
+					
+					<li><a href="#M000015">#left_col_val=</a></li>
+					
+					<li><a href="#M000021">#lft_gap</a></li>
+					
+					<li><a href="#M000030">#mid_point</a></li>
+					
+					<li><a href="#M000024">#my_root</a></li>
+					
+					<li><a href="#M000031">#needs_moving</a></li>
+					
+					<li><a href="#M000018">#parent</a></li>
+					
+					<li><a href="#M000019">#parent=</a></li>
+					
+					<li><a href="#M000022">#rgt_gap</a></li>
+					
+					<li><a href="#M000013">#right_col_name</a></li>
+					
+					<li><a href="#M000016">#right_col_val</a></li>
+					
+					<li><a href="#M000017">#right_col_val=</a></li>
+					
+					<li><a href="#M000028">#siblings</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="../../../LICENSE.html">LICENSE</a></li>
+				
+					<li class="file"><a href="../../../README_rdoc.html">README.rdoc</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../../MindoroMarine.html">MindoroMarine</a></li>
+				
+					<li><a href="../../../MindoroMarine/Acts/HausdorffSpace/ActMethods.html">MindoroMarine::Acts::HausdorffSpace::ActMethods</a></li>
+				
+					<li><a href="../../../MindoroMarine/Acts/HausdorffSpace/ClassMethods.html">MindoroMarine::Acts::HausdorffSpace::ClassMethods</a></li>
+				
+					<li><a href="../../../MindoroMarine/Acts/HausdorffSpace/Gap.html">MindoroMarine::Acts::HausdorffSpace::Gap</a></li>
+				
+					<li><a href="../../../MindoroMarine/Acts/HausdorffSpace/HSArray.html">MindoroMarine::Acts::HausdorffSpace::HSArray</a></li>
+				
+					<li><a href="../../../MindoroMarine/Acts/HausdorffSpace/InstanceMethods.html">MindoroMarine::Acts::HausdorffSpace::InstanceMethods</a></li>
+				
+					<li><a href="../../../MindoroMarine/Acts/HausdorffSpace/VirtualRoot.html">MindoroMarine::Acts::HausdorffSpace::VirtualRoot</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="module">MindoroMarine::Acts::HausdorffSpace::InstanceMethods</h1>
+
+		<div id="description">
+			<p>
+INSTANCE METHODS ######################################################
+</p>
+
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="parent-attribute-method" class="method-detail">
+				<a name="parent"></a>
+				
+				<a name="parent="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">parent</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p class="missing-docs">(Not documented)</p>
+				
+				</div>
+			</div>
+			
+			<div id="in-tree-attribute-method" class="method-detail">
+				<a name="in_tree"></a>
+				
+				<a name="in_tree="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">in_tree</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p class="missing-docs">(Not documented)</p>
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="after-initialize-method" class="method-detail ">
+				<a name="M000011"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">after_initialize</span><span
+						class="method-args">(# initialize isn't always called)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="after-initialize-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 141</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after_initialize</span> <span class="ruby-comment cmt"># initialize isn't always called</span>
+     <span class="ruby-ivar">@parent</span> = <span class="ruby-keyword kw">nil</span>    
+     <span class="ruby-ivar">@children</span> = <span class="ruby-constant">HSArray</span>.<span class="ruby-identifier">new</span>
+     <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">parent</span> = <span class="ruby-keyword kw">self</span>
+     <span class="ruby-ivar">@root</span> = <span class="ruby-keyword kw">nil</span>
+     <span class="ruby-ivar">@is_root</span>=<span class="ruby-keyword kw">false</span>
+     <span class="ruby-ivar">@in_tree</span> = <span class="ruby-keyword kw">false</span>
+     <span class="ruby-ivar">@prev_left</span> = <span class="ruby-keyword kw">nil</span>
+     <span class="ruby-ivar">@prev_right</span> = <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="after-save-method" class="method-detail ">
+				<a name="M000027"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">after_save</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="after-save-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 295</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after_save</span>
+  <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@prev_left</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@prev_right</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-comment cmt"># if we're moving from somewhere else</span>
+        <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">clear</span>
+        <span class="ruby-identifier">scale</span> = ((<span class="ruby-identifier">right_col_val</span><span class="ruby-operator">-</span><span class="ruby-identifier">left_col_val</span>)<span class="ruby-operator">/</span>(<span class="ruby-ivar">@prev_right</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@prev_left</span>)).<span class="ruby-identifier">abs</span>
+        <span class="ruby-identifier">old_mid_point</span> = (<span class="ruby-ivar">@prev_right</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@prev_left</span>)<span class="ruby-operator">/</span><span class="ruby-value">2</span>
+        <span class="ruby-identifier">new_mid_point</span> = (<span class="ruby-identifier">right_col_val</span><span class="ruby-operator">+</span><span class="ruby-identifier">left_col_val</span>)<span class="ruby-operator">/</span><span class="ruby-value">2</span>
+        <span class="ruby-identifier">sql</span> = <span class="ruby-node">&quot;update #{self.class.table_name} t1 set t1.#{left_col_name} = ((t1.#{left_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point}, t1.#{right_col_name} = ((t1.#{right_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point} where t1.#{left_col_name} &gt;#{@prev_left} and t1.#{right_col_name} &lt; #{@prev_right} &quot;</span>       
+        <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">update_sql</span>(<span class="ruby-identifier">sql</span>)
+        <span class="ruby-identifier">build_full_tree</span> <span class="ruby-comment cmt"># get the children back</span>
+  <span class="ruby-keyword kw">else</span>   
+        <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">save</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">child</span>.<span class="ruby-identifier">left_col_val</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">right_col_val</span>) } <span class="ruby-comment cmt"># save only the ones that need lft and rgt</span>
+  <span class="ruby-keyword kw">end</span>
+  <span class="ruby-ivar">@prev_left</span> = <span class="ruby-ivar">@prev_right</span> = <span class="ruby-keyword kw">nil</span>  
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="before-save-method" class="method-detail ">
+				<a name="M000026"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">before_save</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="before-save-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 278</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">before_save</span>
+ <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@parent</span>
+   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">roots</span> <span class="ruby-comment cmt"># this loads virtual_root with roots</span>
+   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">virtual_root</span>.<span class="ruby-identifier">children</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword kw">self</span>  <span class="ruby-comment cmt"># if we haven't got a parent then make the virtual root the parent</span>
+ <span class="ruby-keyword kw">end</span>
+<span class="ruby-identifier">far_left</span> =  <span class="ruby-identifier">furthrest_left</span>
+<span class="ruby-identifier">far_right</span> = <span class="ruby-identifier">furthrest_right</span>
+<span class="ruby-comment cmt">#puts &quot;furthrest_right = #{far_right} furthrest_left = #{far_left}&quot;</span>
+<span class="ruby-identifier">gap</span> = <span class="ruby-identifier">far_right</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">far_left</span>
+  <span class="ruby-keyword kw">if</span>  <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span> 
+     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">left_col_val</span> = <span class="ruby-identifier">far_left</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">gap</span><span class="ruby-operator">/</span><span class="ruby-value">4</span> 
+     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">right_col_val</span> = <span class="ruby-identifier">far_right</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">gap</span><span class="ruby-operator">/</span><span class="ruby-value">4</span>   
+  <span class="ruby-keyword kw">else</span>    
+     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">left_col_val</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">right_col_val</span> = <span class="ruby-identifier">far_left</span><span class="ruby-operator">+</span>(<span class="ruby-identifier">gap</span><span class="ruby-operator">/</span><span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">bias</span>)       
+  <span class="ruby-keyword kw">end</span>
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="build-full-tree-method" class="method-detail ">
+				<a name="M000020"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">build_full_tree</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="build-full-tree-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 211</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build_full_tree</span>
+    <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">in_tree</span> = <span class="ruby-keyword kw">true</span>
+    <span class="ruby-keyword kw">begin</span>
+    <span class="ruby-comment cmt"># get all the children with levels counted and ordered in one SQL statement - this is what nested sets are all about </span>
+    <span class="ruby-comment cmt"># then do a depth first traversal of all the entire list to build the tree in memory</span>
+      <span class="ruby-identifier">child_list</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">find_by_sql</span>(<span class="ruby-node">&quot;SELECT t1.*,(select count(*) from #{self.class.table_name} t2 where t2.#{left_col_name}&lt;t1.#{left_col_name} and t2.#{right_col_name} &gt; t1.#{right_col_name}) as depth from #{self.class.table_name} t1 where t1.#{left_col_name} &gt;#{left_col_val} and t1.#{right_col_name} &lt;#{right_col_val} order by #{left_col_name} desc&quot;</span>)
+      <span class="ruby-identifier">child_list</span>.<span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">in_tree</span> = <span class="ruby-keyword kw">true</span>}
+    <span class="ruby-comment cmt">#for some strange reason depth comes back as a string in Postgresql hence the .to_i</span>
+      <span class="ruby-identifier">build_tree_by_recursion</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-identifier">child_list</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">depth</span>.<span class="ruby-identifier">to_i</span>,<span class="ruby-identifier">child_list</span>)
+    <span class="ruby-keyword kw">rescue</span>
+    <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">in_tree</span> = <span class="ruby-keyword kw">false</span>
+    <span class="ruby-identifier">raise</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">self</span>  
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="children-method" class="method-detail ">
+				<a name="M000025"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">children</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="children-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 269</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">children</span>    
+    <span class="ruby-keyword kw">unless</span> ( <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span> <span class="ruby-operator">||</span> ( <span class="ruby-identifier">left_col_val</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">right_col_val</span> ) <span class="ruby-operator">||</span> <span class="ruby-identifier">in_tree</span>) <span class="ruby-comment cmt"># don't get children unless lft is not equal to rgt </span>
+     <span class="ruby-comment cmt"># puts &quot;load_tree = #{in_tree}&quot;    </span>
+      <span class="ruby-ivar">@children</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">find</span>( <span class="ruby-identifier">:all</span>,<span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot; #{self.class.table_name}.#{left_col_name} &gt;#{left_col_val} and #{self.class.table_name}.#{right_col_name} &lt; #{right_col_val} and #{left_col_val} = (select max(t1.#{left_col_name}) from #{self.class.table_name} t1 where #{self.class.table_name}.#{left_col_name} between t1.#{left_col_name} and t1.#{right_col_name})&quot;</span> )
+   <span class="ruby-keyword kw">else</span>
+      <span class="ruby-ivar">@children</span>
+   <span class="ruby-keyword kw">end</span>
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="is-root--method" class="method-detail ">
+				<a name="M000023"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">is_root?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="is-root--source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 257</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">is_root?</span>
+  <span class="ruby-ivar">@is_root</span>
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="leaf-nodes-method" class="method-detail ">
+				<a name="M000029"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">leaf_nodes</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="leaf-nodes-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 316</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">leaf_nodes</span>
+  <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">find</span> <span class="ruby-identifier">:all</span>,<span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot; #{left_col_name} &gt;#{left_col_val} and #{right_col_name} &lt; #{right_col_val} and #{left_col_name} = #{right_col_name}&quot;</span> 
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="left-col-name-method" class="method-detail ">
+				<a name="M000012"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">left_col_name</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Short hand method to save typing self.class.left_col_name
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="left-col-name-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 153</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">left_col_name</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">left_col_name</span>
+    <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="left-col-val-method" class="method-detail ">
+				<a name="M000014"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">left_col_val</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+get the left col value
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="left-col-val-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 163</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">left_col_val</span>
+       <span class="ruby-identifier">read_attribute</span>(<span class="ruby-identifier">left_col_name</span>)
+    <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="left-col-val--method" class="method-detail ">
+				<a name="M000015"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">left_col_val=</span><span
+						class="method-args">(value)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+set the left col value
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="left-col-val--source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 168</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">left_col_val=</span>(<span class="ruby-identifier">value</span>)
+       <span class="ruby-identifier">write_attribute</span>(<span class="ruby-identifier">left_col_name</span>,<span class="ruby-identifier">value</span>)
+    <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="lft-gap-method" class="method-detail ">
+				<a name="M000021"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">lft_gap</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="lft-gap-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 227</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">lft_gap</span>
+ <span class="ruby-comment cmt"># puts &quot; in lft gap #{parent.class.name}&quot;</span>
+  <span class="ruby-identifier">gap</span> = <span class="ruby-constant">Gap</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">gap</span>.<span class="ruby-identifier">right_col_val</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">left_col_val</span>
+ <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">self</span>  
+  <span class="ruby-identifier">gap</span>.<span class="ruby-identifier">left_col_val</span> = <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">left_col_val</span> 
+ <span class="ruby-keyword kw">else</span>
+ <span class="ruby-comment cmt"># puts &quot;get prev index&quot;</span>
+  <span class="ruby-identifier">prev_index</span> = <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">index</span>(<span class="ruby-keyword kw">self</span>)<span class="ruby-operator">-</span><span class="ruby-value">1</span>
+ <span class="ruby-comment cmt"># puts &quot;prev index = #{prev_index} count = #{parent.children.size}&quot;</span>
+  <span class="ruby-identifier">gap</span>.<span class="ruby-identifier">left_col_val</span> = <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span>[<span class="ruby-identifier">prev_index</span>].<span class="ruby-identifier">right_col_val</span>
+ <span class="ruby-keyword kw">end</span>
+ <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">gap</span> 
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="mid-point-method" class="method-detail ">
+				<a name="M000030"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">mid_point</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="mid-point-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 320</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mid_point</span>
+   (<span class="ruby-identifier">furthrest_left</span><span class="ruby-operator">+</span><span class="ruby-identifier">furthrest_right</span>)<span class="ruby-operator">/</span><span class="ruby-value">2</span>
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="my-root-method" class="method-detail ">
+				<a name="M000024"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">my_root</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="my-root-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 261</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">my_root</span>
+  <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@root</span>
+  <span class="ruby-ivar">@root</span> = (<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">find</span> <span class="ruby-identifier">:first</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot; #{left_col_val} &gt;= #{left_col_name} and #{right_col_val}&lt;= #{right_col_name} &quot;</span>,<span class="ruby-identifier">:order</span> =<span class="ruby-operator">&gt;</span><span class="ruby-node">&quot;#{left_col_name}&quot;</span>) <span class="ruby-comment cmt">#between includes the end points</span>
+  <span class="ruby-keyword kw">else</span>
+  <span class="ruby-ivar">@root</span>
+  <span class="ruby-keyword kw">end</span>
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="needs-moving-method" class="method-detail ">
+				<a name="M000031"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">needs_moving</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="needs-moving-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 324</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">needs_moving</span>
+   <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">left_col_val</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">right_col_val</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_tree</span>
+    <span class="ruby-ivar">@prev_left</span> = <span class="ruby-identifier">left_col_val</span>
+    <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">left_col_val</span> = <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-ivar">@prev_right</span> = <span class="ruby-identifier">right_col_val</span>
+    <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">right_col_val</span> = <span class="ruby-keyword kw">nil</span>
+   <span class="ruby-keyword kw">end</span>  
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="parent-method" class="method-detail ">
+				<a name="M000018"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">parent</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get the parent. If the parent hasn&#8217;t already been set, and if
+we&#8217;re not building the full tree (which sets parents) and if
+we&#8217;ve got a valid lft and right then construct the SQL to get the
+parent from the DB. If none is found then it&#8217;s a root so set the
+parent to be the class.virtual_root If the parent is already set then
+don&#8217;t go to the database to look for it, just return it
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="parent-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 187</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">parent</span>
+     <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_tree</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">left_col_val</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">right_col_val</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@parent</span> <span class="ruby-comment cmt"># only get the parent by SQL if we don't know what it is</span>
+     <span class="ruby-ivar">@parent</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">find</span> <span class="ruby-identifier">:first</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot; #{left_col_val} &gt; #{self.class.left_col_name} and #{left_col_val} &lt; #{self.class.right_col_name} &quot;</span>,<span class="ruby-identifier">:order</span> =<span class="ruby-operator">&gt;</span><span class="ruby-value str">'#{self.class.left_col_name} DESC'</span>
+         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@parent</span>        
+          <span class="ruby-comment cmt"># @is_root = (lft == rgt) || (id == root.id)</span>
+           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">virtual_root</span>
+         <span class="ruby-keyword kw">end</span> 
+     <span class="ruby-keyword kw">else</span>
+     <span class="ruby-ivar">@parent</span>
+     <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="parent--method" class="method-detail ">
+				<a name="M000019"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">parent=</span><span
+						class="method-args">(new_parent)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="parent--source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 200</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">parent=</span>(<span class="ruby-identifier">new_parent</span>)
+     <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@parent</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">new_parent</span>
+        <span class="ruby-ivar">@parent</span> = <span class="ruby-identifier">new_parent</span>
+        <span class="ruby-identifier">needs_moving</span>
+        <span class="ruby-ivar">@is_root</span>  = <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">VirtualRoot</span>) 
+     <span class="ruby-keyword kw">end</span>  
+     <span class="ruby-comment cmt"># [TODO] clean this up with parent.save_children  </span>
+     <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">save</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">in_tree</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">VirtualRoot</span>) 
+     <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@parent</span>
+    <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="rgt-gap-method" class="method-detail ">
+				<a name="M000022"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">rgt_gap</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="rgt-gap-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 242</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">rgt_gap</span>
+<span class="ruby-comment cmt"># puts &quot; in rgt gap #{parent.class.name}&quot;</span>
+ <span class="ruby-identifier">gap</span> = <span class="ruby-constant">Gap</span>.<span class="ruby-identifier">new</span>
+ <span class="ruby-identifier">gap</span>.<span class="ruby-identifier">left_col_val</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">right_col_val</span>
+ <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">last</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">self</span>  
+  <span class="ruby-identifier">gap</span>.<span class="ruby-identifier">right_col_val</span> = <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">right_col_val</span> 
+ <span class="ruby-keyword kw">else</span>
+<span class="ruby-comment cmt"># puts &quot;get next index&quot;</span>
+ <span class="ruby-identifier">next_index</span> = <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">index</span>(<span class="ruby-keyword kw">self</span>)<span class="ruby-operator">+</span><span class="ruby-value">1</span>
+<span class="ruby-comment cmt"># puts &quot;next index = #{next_index} count = #{parent.children.size}&quot;</span>
+ <span class="ruby-identifier">gap</span>.<span class="ruby-identifier">right_col_val</span> =  <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span>[<span class="ruby-identifier">next_index</span>].<span class="ruby-identifier">left_col_val</span>
+ <span class="ruby-keyword kw">end</span> 
+ <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">gap</span>
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="right-col-name-method" class="method-detail ">
+				<a name="M000013"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">right_col_name</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Short hand method to save typing self.class.right_col_name
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="right-col-name-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 158</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">right_col_name</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">right_col_name</span>
+    <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="right-col-val-method" class="method-detail ">
+				<a name="M000016"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">right_col_val</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+get the right col value
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="right-col-val-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 173</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">right_col_val</span>
+      <span class="ruby-identifier">read_attribute</span>(<span class="ruby-identifier">right_col_name</span>)
+    <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="right-col-val--method" class="method-detail ">
+				<a name="M000017"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">right_col_val=</span><span
+						class="method-args">(value)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+set the right col value
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="right-col-val--source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 178</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">right_col_val=</span>(<span class="ruby-identifier">value</span>)
+       <span class="ruby-identifier">write_attribute</span>(<span class="ruby-identifier">right_col_name</span>,<span class="ruby-identifier">value</span>)
+    <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="siblings-method" class="method-detail ">
+				<a name="M000028"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">siblings</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="siblings-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 310</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">siblings</span>
+  <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">parent</span>
+   <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">reject</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">self</span>}
+  <span class="ruby-keyword kw">end</span>
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="private-instance-method-details" class="method-section section">
+			<h3 class="section-header">Private Instance Methods</h3>
+
+		
+			<div id="build-tree-by-recursion-method" class="method-detail ">
+				<a name="M000034"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">build_tree_by_recursion</span><span
+						class="method-args">(parent,depth,ar_results)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+this assumes a nicely ordered tree such that the next depth is always one
+more tha the existing depth otherwise throw a wobbly the strange .to_i has
+to be there because depth can come back from the db as a string
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="build-tree-by-recursion-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 355</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build_tree_by_recursion</span>(<span class="ruby-identifier">parent</span>,<span class="ruby-identifier">depth</span>,<span class="ruby-identifier">ar_results</span>)
+ <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">ar_results</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ar_results</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">depth</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">depth</span>
+     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ar_results</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">depth</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">depth</span> 
+        <span class="ruby-identifier">current_record</span> = <span class="ruby-identifier">ar_results</span>.<span class="ruby-identifier">pop</span>
+       <span class="ruby-comment cmt"># puts &quot;curr record in tree =#{current_record.in_tree} parent in tree = #{parent.in_tree}&quot;</span>
+        <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">current_record</span>
+        <span class="ruby-identifier">current_record</span>.<span class="ruby-identifier">in_tree</span> = <span class="ruby-keyword kw">false</span>
+      <span class="ruby-comment cmt">#  puts &quot;+++&quot;</span>
+     <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">ar_results</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">depth</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">==</span> (<span class="ruby-identifier">depth</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>) 
+        <span class="ruby-identifier">current_record</span>.<span class="ruby-identifier">in_tree</span> = <span class="ruby-keyword kw">true</span>
+        <span class="ruby-identifier">build_tree_by_recursion</span>(<span class="ruby-identifier">current_record</span>,<span class="ruby-identifier">ar_results</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">depth</span>.<span class="ruby-identifier">to_i</span>,<span class="ruby-identifier">ar_results</span>)
+        <span class="ruby-identifier">current_record</span>.<span class="ruby-identifier">in_tree</span> = <span class="ruby-keyword kw">false</span>
+     <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">ar_results</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">depth</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> (<span class="ruby-identifier">depth</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)  
+       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;badly formed nested set result set&quot;</span>          
+     <span class="ruby-keyword kw">end</span>
+ <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># while</span>
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="furthrest-left-method" class="method-detail ">
+				<a name="M000032"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">furthrest_left</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="furthrest-left-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 344</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">furthrest_left</span>
+   <span class="ruby-identifier">lft_gap</span>.<span class="ruby-identifier">left_col_val</span> 
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="furthrest-right-method" class="method-detail ">
+				<a name="M000033"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">furthrest_right</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="furthrest-right-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_hausdorff_space.rb, line 348</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">furthrest_right</span>
+  <span class="ruby-identifier">rgt_gap</span>.<span class="ruby-identifier">right_col_val</span> 
+<span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+
