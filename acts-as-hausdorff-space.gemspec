@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
     "VERSION.yml",
     "lib/acts-as-hausdorff-space.rb",
     "lib/acts_as_hausdorff_space.rb",
-    "test/acts_as_hausdorff_space_gem_test.db",
     "test/acts_as_hausdorff_space_test.rb",
     "test/database.yml",
     "test/debug.log",
