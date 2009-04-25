@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
     "lib/acts_as_hausdorff_space.rb",
     "test/acts_as_hausdorff_space_test.rb",
     "test/database.yml",
-    "test/debug.log",
     "test/mysql.rb",
     "test/postgresql.rb",
     "test/schema.rb",
