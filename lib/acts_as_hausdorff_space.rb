@@ -326,7 +326,7 @@ def after_save
         scale = ((right_col_val-left_col_val)/(@prev_right - @prev_left)).abs
         old_mid_point = (@prev_right + @prev_left)/2
         new_mid_point = (right_col_val+left_col_val)/2
-        sql = "update #{self.class.table_name} t1 set t1.#{left_col_name} = ((t1.#{left_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point}, t1.#{right_col_name} = ((t1.#{right_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point} where t1.#{left_col_name} >#{@prev_left} and t1.#{right_col_name} < #{@prev_right} "       
+        sql = "update #{self.class.table_name}  set #{left_col_name} = ((#{left_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point}, #{right_col_name} = ((#{right_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point} where #{left_col_name} >#{@prev_left} and #{right_col_name} < #{@prev_right} "       
         connection.update_sql(sql)
         build_full_tree # get the children back
   else   

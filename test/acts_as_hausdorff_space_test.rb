@@ -92,6 +92,19 @@ context 'Instance Methods - Add a Root' do
     assert_equal 4,read_root.children.size,"the child didn't get moved"
     assert_equal 1,read_root.children.first.children.size,"the child didn't appear in the right place"     
    end
+   
+   should 'allow editing one child on its own' do
+   all_recs = HausdorffSpaceTest.find :all
+   rec = all_recs[3]
+   lft = rec.left_col
+   rgt = rec.right_col
+   id = rec.id
+   rec.name = 'new name'
+   rec.save
+   read_rec = HausdorffSpaceTest.find id
+   assert_equal lft,read_rec.left_col,'the left column is wrong on a read read'
+   assert_equal rgt,read_rec.right_col,'the right column is wrong on a read read' 
+   end
   end # context 'add many children' 
   
   context 'add many grandchildren' do
