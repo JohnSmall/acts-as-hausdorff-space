@@ -10,24 +10,66 @@ Gem::Specification.new do |s|
   s.email = %q{jds340@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
-    "README.rdoc"
+     "README.rdoc"
   ]
   s.files = [
-    "LICENSE",
-    "README.rdoc",
-    "Rakefile",
-    "VERSION.yml",
-    "lib/acts-as-hausdorff-space.rb",
-    "lib/acts_as_hausdorff_space.rb",
-    "test/acts_as_hausdorff_space_gem_test.db",
-    "test/acts_as_hausdorff_space_test.rb",
-    "test/database.yml",
-    "test/debug.log",
-    "test/mysql.rb",
-    "test/postgresql.rb",
-    "test/schema.rb",
-    "test/sqlite3.rb",
-    "test/test_helper.rb"
+    ".document",
+     ".gitignore",
+     "LICENSE",
+     "README.rdoc",
+     "Rakefile",
+     "VERSION.yml",
+     "acts-as-hausdorff-space.gemspec",
+     "design_idea.rdoc",
+     "doc/LICENSE.html",
+     "doc/MindoroMarine.html",
+     "doc/MindoroMarine/Acts.html",
+     "doc/MindoroMarine/Acts/HausdorffSpace.html",
+     "doc/MindoroMarine/Acts/HausdorffSpace/ActMethods.html",
+     "doc/MindoroMarine/Acts/HausdorffSpace/ClassMethods.html",
+     "doc/MindoroMarine/Acts/HausdorffSpace/Gap.html",
+     "doc/MindoroMarine/Acts/HausdorffSpace/HSArray.html",
+     "doc/MindoroMarine/Acts/HausdorffSpace/InstanceMethods.html",
+     "doc/MindoroMarine/Acts/HausdorffSpace/VirtualRoot.html",
+     "doc/README_rdoc.html",
+     "doc/created.rid",
+     "doc/images/brick.png",
+     "doc/images/brick_link.png",
+     "doc/images/bug.png",
+     "doc/images/bullet_black.png",
+     "doc/images/bullet_toggle_minus.png",
+     "doc/images/bullet_toggle_plus.png",
+     "doc/images/date.png",
+     "doc/images/find.png",
+     "doc/images/loadingAnimation.gif",
+     "doc/images/macFFBgHack.png",
+     "doc/images/package.png",
+     "doc/images/page_green.png",
+     "doc/images/page_white_text.png",
+     "doc/images/page_white_width.png",
+     "doc/images/plugin.png",
+     "doc/images/ruby.png",
+     "doc/images/tag_green.png",
+     "doc/images/wrench.png",
+     "doc/images/wrench_orange.png",
+     "doc/images/zoom.png",
+     "doc/index.html",
+     "doc/js/darkfish.js",
+     "doc/js/jquery.js",
+     "doc/js/quicksearch.js",
+     "doc/js/thickbox-compressed.js",
+     "doc/lib/acts-as-hausdorff-space_rb.html",
+     "doc/lib/acts_as_hausdorff_space_rb.html",
+     "doc/rdoc.css",
+     "lib/acts-as-hausdorff-space.rb",
+     "lib/acts_as_hausdorff_space.rb",
+     "test/acts_as_hausdorff_space_test.rb",
+     "test/database.yml",
+     "test/mysql.rb",
+     "test/postgresql.rb",
+     "test/schema.rb",
+     "test/sqlite3.rb",
+     "test/test_helper.rb"
   ]
   s.homepage = %q{http://github.com/JohnSmall/acts-as-hausdorff-space}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -36,11 +78,11 @@ Gem::Specification.new do |s|
   s.summary = %q{Use real numbers instead of integers for nested sets because real numbers are a Hausdorff space}
   s.test_files = [
     "test/schema.rb",
-    "test/sqlite3.rb",
-    "test/mysql.rb",
-    "test/test_helper.rb",
-    "test/acts_as_hausdorff_space_test.rb",
-    "test/postgresql.rb"
+     "test/sqlite3.rb",
+     "test/mysql.rb",
+     "test/test_helper.rb",
+     "test/acts_as_hausdorff_space_test.rb",
+     "test/postgresql.rb"
   ]
 
   if s.respond_to? :specification_version then
