@@ -139,7 +139,7 @@ module MindoroMarine
     
     ############################ INSTANCE METHODS ######################################################
     module InstanceMethods
-    attr_accessor :parent,:in_tree
+    attr_accessor :in_tree
     
     # initialize isn't always called so we can't do this in initialize. This sets up things we need to hold the tree together 
     def after_initialize 
@@ -189,15 +189,15 @@ module MindoroMarine
     # set the parent to be the class.virtual_root
     # If the parent is already set then don't go to the database to look for it, just return it
     def parent
-     if !in_tree && left_col_val && right_col_val && !@parent # only get the parent by SQL if we don't know what it is
-     @parent = self.class.find :first, :conditions => " #{left_col_val} > #{self.class.left_col_name} and #{left_col_val} < #{self.class.right_col_name} ",:order =>'#{self.class.left_col_name} DESC'
-         if !@parent        
+   #  if !in_tree && left_col_val && right_col_val && !@parent # only get the parent by SQL if we don't know what it is
+   #  @parent = self.class.find :first, :conditions => " #{left_col_val} > #{self.class.left_col_name} and #{left_col_val} < #{self.class.right_col_name} ",:order =>'#{self.class.left_col_name} DESC'
+   #      if !@parent        
           # @is_root = (lft == rgt) || (id == root.id)
-           return self.class.virtual_root
-         end 
-     else
+   #        return self.class.virtual_root
+   #      end 
+   #  else
      @parent
-     end
+   #  end
     end
     
     # set a new parent. This will save the parent, which will force a save of this child after the parent has had its lft and rgt set
@@ -293,11 +293,15 @@ def children
 end
 
 # Where most of the clever action happens.
-# 1. If there's no parent then set the <class>.virtual_root to be the parent before continuing
-# 2. Find the left boundary and the right boundary from the parent or the siblings or both
-# 3. If this record has no children then set lft=rgt and put it well on the left of the gap
-# 4. If there are children then set the lft and rgt to a comfortable size to hold the children
+# 1. If we haven't got a parent and it's not a new record then leave things alone. This allows us to update
+#    records in isolation without messing with tree positions
+# 2. If there's no parent then set the <class>.virtual_root to be the parent before continuing
+# 3. Find the left boundary and the right boundary from the parent or the siblings or both
+# 4. If this record has no children then set lft=rgt and put it well on the left of the gap
+# 5. If there are children then set the lft and rgt to a comfortable size to hold the children
+
 def before_save
+if new_record? || parent
  if !@parent
    self.class.roots # this loads virtual_root with roots
    self.class.virtual_root.children << self  # if we haven't got a parent then make the virtual root the parent
@@ -312,6 +316,7 @@ gap = far_right - far_left
   else    
      self.left_col_val = self.right_col_val = far_left+(gap/self.class.bias)       
   end
+end  
 end
 
 # Where most of the remaining action happens
@@ -320,7 +325,9 @@ end
 # The code works out the values required for a single SQL statement that pulls the entire branch across
 #
 # If we haven't moved from elsewhere then save each child that needs saving
+# If we haven't got a parent then leave things alone - this allows records to be updated in isolation
 def after_save
+ if parent
   if @prev_left && @prev_right && @children.size > 0 # if we're moving from somewhere else
         @children.clear
         scale = ((right_col_val-left_col_val)/(@prev_right - @prev_left)).abs
@@ -332,7 +339,8 @@ def after_save
   else   
         @children.each{|child| child.save if !(child.left_col_val && child.right_col_val) } # save only the ones that need lft and rgt
   end
-  @prev_left = @prev_right = nil  
+  @prev_left = @prev_right = nil
+ end   
 end
 
 # get the siblings. All immediate children of the parent minus self
