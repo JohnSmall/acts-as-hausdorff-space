@@ -1,0 +1,27 @@
+Design concepts & constraints
+=============================
+
+The basic concept of using real numbers to implement the nested set model in reltational databases is quite simple. But as
+always the devil is in the detail. SQL is a set based language and it works quite well as a declarative language, but Ruby
+has a definite imperative flavour and that means you have to worry about doing things in the right order. Also although we're
+using real numbers computers don't actually work like that, they emulate real numbers up to a finite precision by using binary 
+numbers. That means that we do have to worry about running out of gaps between any two numbers. We don't run into that problem
+straight away, like we'd do if using integers for nested sets but we will run into the problem at some point. 
+
+That means when we put an item inside a parent we have to be careful to leave a good amount of space to put more elements inside
+the parent without running out of real numbers. For example we could have a parent node with lft = 1 and rgt = 2, we put one child
+inside it with lft=rgt=1.5. The next child we'd put at lft=rgt=1.75, the next at 1.875, i.e at half the gap between the largest child
+rgt and the parent rgt = 2. It's very uneven, and we could go back a reorganise our numbering each time we add a child, but that's
+the very thing we want to avoid doing because that's the whole point of using real numbers instead of integers, you shouldn't have
+to juggle things about to make space for new entries. If we were using .5 of the gap left then after a million children we'd be
+beyond our finite precision limit. The way I've approached this is to assume that most of the time trees are wide and shallow
+and therefore we can maintain space be putting new items in say 1/1E6 of the space left. That way we'll keep a lot of space
+available for new siblings, but we might run out of space if we try to build very deep trees. I'll leave it as an excerise for the
+reader to experiment with this and find out where the limits lie. You can adjust the amount of available space each item uses up
+by setting the bias, the default is 1E6
+
+Going back to the issue of imperative vs declarative styles. We have to think about records in their different states. While the
+model is a collection of records in a relational database we can use SQL to act declaratively on whole sets at a time. The relation
+ships are determined only by the relations between the lfts and the rgts. But when the records are loaded into Ruby as ActiveRecord
+instances we give them a different set of relationships based on things like "parent" and "children" and we maintain variables
+to keep the tree intact. Loading and saving the records means translating between a  
