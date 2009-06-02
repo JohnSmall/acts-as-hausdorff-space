@@ -1,7 +1,7 @@
 ENV["RAILS_ENV"] = "test"
 require 'rubygems'
 require 'activerecord'
-require 'acts-as-hausdorff-space'
+require File.dirname(__FILE__)+'/../lib/acts-as-hausdorff-space'
 require 'test/unit'
 require 'shoulda'
 
@@ -11,7 +11,7 @@ end
 
 
 #class Test::Unit::TestCase
-# use_transactional_fixtures = true
+# use_transactional_fixtures = false
 #end
 
 module MindoroMarine

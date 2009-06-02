@@ -28,10 +28,21 @@ class ActsAsHausdorffSpaceTest < Test::Unit::TestCase
     assert_equal('right_col',HausdorffSpaceTest.right_col_name,'class attribute right col not working')
   end
   
+  
 ####### Test Class Methods #######
 context 'Class Methods - Add a Root' do
    setup do
    @hst = HausdorffSpaceTest.create(:name=>'top 1')
+   end
+   
+   should "set in_tree_load to true" do
+   HausdorffSpaceTest.in_tree_load = true
+   assert HausdorffSpaceTest.in_tree_load?,'in tree load was not set to true'
+   end
+   
+   should "set in_tree_load to false" do
+   HausdorffSpaceTest.in_tree_load = false
+   assert !HausdorffSpaceTest.in_tree_load?,'in tree load was not set to false'
    end
    
    should 'read root and virtual root' do
@@ -43,44 +54,106 @@ context 'Class Methods - Add a Root' do
        assert_equal [],read_root.children, 'hs_children is not empty'
    end 
    
-   should 'allow other roots to be added' do
+   should 'allow other roots to be added' do      
        HausdorffSpaceTest.create(:name=>'top 2')
        read_roots = HausdorffSpaceTest.roots
        assert_equal(2,read_roots.size,'failed to get multiple roots')
        assert_not_equal(read_roots[0].left_col_val,read_roots[1].left_col_val,'the roots have the same left col values')
-    end  
+    end
+    
+    # records with lft=rgt=null are not roots
+    should 'not identify records with lft and rgt = null as roots' do
+     HausdorffSpaceTest.connection.update_sql("update hausdorff_space_tests set #{HausdorffSpaceTest.left_col_name} = null,  #{HausdorffSpaceTest.right_col_name} = null  " )
+     assert_equal 0,HausdorffSpaceTest.roots.size 
+    end
+     # an existing record with lft or rgt set should be able to become a root
+    should "allow an existing record in the tree to become a root"  do
+   
+    end
+    
+    # an existing record without lft or rgt set should be able to become a root
+    should "allow an existing record not in the tree to become a root"  do
+    
+    end
+    
+    
  end # context
 # instance methods
 context 'Instance Methods - Add a Root' do
    setup do
+  # puts "************ create a root ************"
    @hst = HausdorffSpaceTest.create(:name=>'top 1')
+  # check_root = HausdorffSpaceTest.find @hst.id
+  # puts check_root 
    end
    
+    # the parent should be able to be set via record.children << another_record
+  should 'set the parent by <<' do
+      r = HausdorffSpaceTest.new(:name=>'top')
+      HausdorffSpaceTest.roots
+      HausdorffSpaceTest.virtual_root.children << r
+      r.save
+      assert !r.new_record? # should have been saved
+      assert_equal HausdorffSpaceTest.virtual_root,r.parent, ' << the parent is not a virtual root'
+  end
+  
+  # the parent should be able to be set via another_record.parent =  << record
+  should 'set the parent by parent = ' do
+      r = HausdorffSpaceTest.new(:name=>'top')
+      HausdorffSpaceTest.roots
+      r.parent = HausdorffSpaceTest.virtual_root
+      r.save
+      assert !r.new_record?
+      assert_equal r,HausdorffSpaceTest.virtual_root.children[1],' = the parent is not a virtual root'
+  end
+  
  context 'add one child to root' do
    setup do
-    @sub_level = HausdorffSpaceTest.new(:name=>'child 1')
+   # puts "************ add one child ***********"
+    @sub_level = HausdorffSpaceTest.new(:name=>'child 1') 
+   # puts "id = #{@sub_level.id} lft = #{@sub_level.left_col} rgt = #{@sub_level.right_col}"  
     @hst.children << @sub_level 
+   # puts "id = #{@sub_level.id} lft = #{@sub_level.left_col} rgt = #{@sub_level.right_col}"
+   # puts "root = #{@hst.id} lft = #{@hst.left_col} rgt = #{@hst.right_col}"   
    end 
    
   should 'link parent and child' do
     validate_parent_one_child_settings(@hst,@sub_level)
-    assert_equal @hst,@sub_level.my_root
+    root = HausdorffSpaceTest.find @hst.id
+   # puts root
+    assert_equal @hst,@sub_level.my_root,'my root is not the parent'
    end 
    
   should 'read parent and child back' do
    full_tree = HausdorffSpaceTest.full_tree
    validate_parent_one_child_settings(full_tree,full_tree.children[0])
    assert_equal full_tree,full_tree.children[0].my_root
-   end   
+   end  
+   
+  
+  
+  # this definitly should not be allowed since we can't have an infinite loop
+  should 'not allow a parent to be its own parent' do
+  
+  end
+  
+  # daft idea but in theory it's possible to have root->parent->child changing to root->child->parent
+  should "allow a parent to become a child of one of its children" do
+  
+  end 
   end # context "add one child to root" 
   
   context 'add many children' do
    setup do
+  # puts "in tree #{HausdorffSpaceTest.in_tree_load?}"
    (0..4).each{|n| @hst.children << HausdorffSpaceTest.new(:name=>"child #{n}")  }
+  # puts "children size #{@hst.children.size}"
+   @hst.save
    end
    
    should 'have gaps between children' do
     read_root = HausdorffSpaceTest.full_tree
+    assert_equal 5,read_root.children.size
     (1..4).each do |n| 
     assert read_root.children[n-1].right_col_val < read_root.children[n].left_col_val,' there should be a gap between each child' 
     end
@@ -182,6 +255,8 @@ private ############################ PRIVATE ###################################
   end
   
  def validate_parent_one_child_settings(parent,child)
+   assert_not_nil parent,'the parent should exist'
+   assert_not_nil child,'the child should exist'
    assert_equal parent,child.parent,'the sublevel should have a parent'
    assert_equal child,parent.children[0], 'the parent should own the child'
    assert_not_equal parent.left_col_val,child.left_col_val, 'there should be a gap between the parent left and the child left'

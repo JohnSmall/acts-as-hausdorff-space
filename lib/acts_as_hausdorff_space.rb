@@ -56,6 +56,10 @@ module MindoroMarine
      @children = HSArray.new
      @children.parent = self
     end
+   
+    def save
+      @children.each{|child| child.save}
+    end 
     
     end #VirtualRoot
     
@@ -74,8 +78,8 @@ module MindoroMarine
          self << item
          end
         else
-         super  
-         elem.parent = self.parent if self.parent && elem.respond_to?('parent') 
+         super
+         elem.parent = self.parent if self.parent && elem.respond_to?('parent')                  
         end         
        end #<<(elem) 
     end #HSArray
@@ -85,23 +89,33 @@ module MindoroMarine
         
     # Get all the top level roots. This does a find of all records with no immediate parent in the database. 
     # When they're loaded they get a virtual root attached as their parent. This is to make sure that every node has a parent which helps to
-    # generalise and simplify the code for working out left and right boundaries.    
+    # generalise and simplify the code for working out left and right boundaries. 
+    def in_tree_load?
+      @in_tree_load == true
+    end
+       
+    def in_tree_load=(loading_tree)
+      @in_tree_load=loading_tree
+    end
+    
     def roots
+     self.in_tree_load = true
+     begin
      top_levels =    self.find( :all, :conditions => "not exists (select t1.id from #{self.table_name} t1
                                                                        where t1.#{left_col_name} <#{self.table_name}.#{left_col_name} 
-                                                                       and t1.#{right_col_name} > #{self.table_name}.#{right_col_name})",:order=>"#{left_col_name}")
+                                                                       and t1.#{right_col_name} > #{self.table_name}.#{right_col_name}) 
+                                                                       and #{self.table_name}.#{right_col_name} is not null 
+                                                                       and #{self.table_name}.#{left_col_name} is not null",
+                                                                       :order=>"#{left_col_name}")
      self.virtual_root.children.clear
      top_levels.each do |tl|
-     begin
-     tl.in_tree = true
-     self.virtual_root.children << tl
-     tl.in_tree = false
-     rescue
-     tl.in_tree = false
-     raise
+        self.virtual_root.children << tl
+        end
+     ensure
+     self.in_tree_load = false
      end
-     end 
-    end
+    end # def roots
+    
     # get the first root from roots
     def root
         roots.first
@@ -148,10 +162,15 @@ module MindoroMarine
      @children.parent = self
      @root = nil
      @is_root=false
-     @in_tree = false
+     #@in_tree = false
      @prev_left = nil
      @prev_right = nil
+     @new_parent = false
+     @needs_moving = false
+     @state = 0
     end
+    
+    
     
     # Short hand method to save typing self.class.left_col_name
     def left_col_name
@@ -202,14 +221,26 @@ module MindoroMarine
     
     # set a new parent. This will save the parent, which will force a save of this child after the parent has had its lft and rgt set
     # If we're loading a full tree, we don't save the parent and child as that would be daft
+    # we can add children to parents via parent.children << a_record or a_record.parent = parent. The 2nd form doesn't go
+    # through the overridden << method on array, so we have to force it to.
     def parent=(new_parent)
      if @parent != new_parent
-        @parent = new_parent
-        needs_moving!
-        @is_root  = @parent.is_a?(VirtualRoot) 
+        if new_parent.children.include?(self)
+          @parent = new_parent
+          unless self.class.in_tree_load?
+            needs_moving! 
+            @new_parent = true
+          end  
+          @is_root  = @parent.is_a?(VirtualRoot) 
+        else
+         new_parent.children << self # if we entered this method via record.parent = parent
+        end   
      end  
-     # [TODO] clean this up with parent.save_children  
-     parent.save unless in_tree || @parent.is_a?(VirtualRoot) 
+     # [TODO] clean this up with parent.save_children 
+     # unless in_tree # if we're loading the tree then don't do this
+     #  @needs_moving = true # if it needs moving then before_save will set lft and rgt
+       parent.save unless self.class.in_tree_load?  || @parent.is_a?(VirtualRoot)        
+     #end  
      return @parent
     end
     
@@ -217,32 +248,28 @@ module MindoroMarine
     # Then it executes a private method which does a depth first recursion of the returned dataset to build the tree.
     # Returns this record as the root of the tree
     def build_full_tree
-    self.in_tree = true
+    self.class.in_tree_load = true
     begin
     # get all the children with levels counted and ordered in one SQL statement - this is what nested sets are all about 
     # then do a depth first traversal of all the entire list to build the tree in memory
       child_list = self.class.find_by_sql("SELECT t1.*,(select count(*) from #{self.class.table_name} t2 where t2.#{left_col_name}<t1.#{left_col_name} and t2.#{right_col_name} > t1.#{right_col_name}) as depth from #{self.class.table_name} t1 where t1.#{left_col_name} >#{left_col_val} and t1.#{right_col_name} <#{right_col_val} order by #{left_col_name} desc")
-      child_list.each{|r| r.in_tree = true}
-    #for some strange reason depth comes back as a string in Postgresql hence the .to_i
-      build_tree_by_recursion(self,child_list.last.depth.to_i,child_list)
-    rescue
-    self.in_tree = false
-    raise
+     # child_list.each{|r| r.in_tree = true}
+    #for some strange reason depth comes back as a string in Postgresql hence the .to_i      
+      build_tree_by_recursion(self,child_list.last.depth.to_i,child_list) unless child_list.size == 0
+    ensure
+      self.class.in_tree_load  = false
     end
     return self  
 end
 
 # get the gap on the left of this record
 def lft_gap
- # puts " in lft gap #{parent.class.name}"
   gap = Gap.new
   gap.right_col_val = self.left_col_val
  if parent.children.first == self  
   gap.left_col_val = parent.left_col_val 
  else
- # puts "get prev index"
   prev_index = parent.children.index(self)-1
- # puts "prev index = #{prev_index} count = #{parent.children.size}"
   gap.left_col_val = parent.children[prev_index].right_col_val
  end
  return gap 
@@ -250,15 +277,12 @@ end
 
 # get the gap on the right of this record
 def rgt_gap
-# puts " in rgt gap #{parent.class.name}"
  gap = Gap.new
  gap.left_col_val = self.right_col_val
  if parent.children.last == self  
   gap.right_col_val = parent.right_col_val 
  else
-# puts "get next index"
  next_index = parent.children.index(self)+1
-# puts "next index = #{next_index} count = #{parent.children.size}"
  gap.right_col_val =  parent.children[next_index].left_col_val
  end 
  return gap
@@ -273,6 +297,7 @@ end
 # This is different to how it's done in acts_as_nested_set
 def my_root
   unless @root
+#  puts "get my_root conditions #{left_col_val} >= #{left_col_name} and #{right_col_val}<= #{right_col_name}  "
   @root = (self.class.find :first, :conditions => " #{left_col_val} >= #{left_col_name} and #{right_col_val}<= #{right_col_name} ",:order =>"#{left_col_name}") #between includes the end points
   else
   @root
@@ -284,7 +309,7 @@ end
 # The sql is a bit more involved than used in acts_as_nested_set because this is a pure nested set model and there's no parent_id
 # Because we're not using parent_id the returned array is not an AR associattion, unlike acts_as_nested_set. You have been warned.
 def children    
-    unless ( @children.size>0 || ( left_col_val == right_col_val ) || in_tree) # don't get children unless lft is not equal to rgt 
+    unless ( @children.size>0 || ( left_col_val == right_col_val ) || self.class.in_tree_load?) # don't get children unless lft is not equal to rgt 
      # puts "load_tree = #{in_tree}"    
       @children << self.class.find( :all,:conditions => " #{self.class.table_name}.#{left_col_name} >#{left_col_val} and #{self.class.table_name}.#{right_col_name} < #{right_col_val} and #{left_col_val} = (select max(t1.#{left_col_name}) from #{self.class.table_name} t1 where #{self.class.table_name}.#{left_col_name} between t1.#{left_col_name} and t1.#{right_col_name})" )
    else
@@ -299,24 +324,40 @@ end
 # 3. Find the left boundary and the right boundary from the parent or the siblings or both
 # 4. If this record has no children then set lft=rgt and put it well on the left of the gap
 # 5. If there are children then set the lft and rgt to a comfortable size to hold the children
-
+=begin
 def before_save
 if new_record? || parent
+puts 'ok ready to calc lft and rgt'
  if !@parent
    self.class.roots # this loads virtual_root with roots
    self.class.virtual_root.children << self  # if we haven't got a parent then make the virtual root the parent
  end
-far_left =  furthrest_left
-far_right = furthrest_right
-#puts "furthrest_right = #{far_right} furthrest_left = #{far_left}"
-gap = far_right - far_left
-  if  @children.size>0 
-     self.left_col_val = far_left + gap/4 
-     self.right_col_val = far_right - gap/4   
-  else    
-     self.left_col_val = self.right_col_val = far_left+(gap/self.class.bias)       
-  end
+ if @needs_moving || new_record? # we only calculate lft and rgt if it's a new record or if the parent has changed
+   puts "needs moving = #{@needs_moving} new_record = #{new_record?}"
+  calc_lft_and_rgt 
+  @needs_moving = false
+end
 end  
+end
+=end
+
+def before_create
+ if !@parent 
+   #puts "before create set parent"
+   self.class.roots # this loads virtual_root with roots
+   self.class.virtual_root.children << self  # if we haven't got a parent then make the virtual root the parent
+ end
+  calc_lft_and_rgt
+  true
+end
+
+def before_update
+  if @new_parent || children.size > 0
+  # puts "before update set left and right id = #{id}"
+   calc_lft_and_rgt 
+   @new_parent = false
+   true # this must return true after setting @needs_moving to false or the record won't be saved
+  end  
 end
 
 # Where most of the remaining action happens
@@ -328,18 +369,20 @@ end
 # If we haven't got a parent then leave things alone - this allows records to be updated in isolation
 def after_save
  if parent
-  if @prev_left && @prev_right && @children.size > 0 # if we're moving from somewhere else
+  if @needs_moving && @children.size > 0 # if we're moving from somewhere else
         @children.clear
         scale = ((right_col_val-left_col_val)/(@prev_right - @prev_left)).abs
         old_mid_point = (@prev_right + @prev_left)/2
         new_mid_point = (right_col_val+left_col_val)/2
         sql = "update #{self.class.table_name}  set #{left_col_name} = ((#{left_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point}, #{right_col_name} = ((#{right_col_name} - #{old_mid_point})*#{scale})+#{new_mid_point} where #{left_col_name} >#{@prev_left} and #{right_col_name} < #{@prev_right} "       
         connection.update_sql(sql)
-        build_full_tree # get the children back
-  else   
+        @needs_moving =false
+        build_full_tree # get the children back        
+  else  
         @children.each{|child| child.save if !(child.left_col_val && child.right_col_val) } # save only the ones that need lft and rgt
   end
   @prev_left = @prev_right = nil
+  @new_parent = false
  end   
 end
 
@@ -376,13 +419,14 @@ def mid_point
    (furthrest_left+furthrest_right)/2
 end
 
-# if the record needs moving then save the old lft and rgt and set the current lft and rgt to nil
-def needs_moving!
-   if left_col_val && right_col_val && !in_tree
+# if the record needs moving then save the old lft and rgt and set the current lft and rgt to nil so we can work out the scaling and translation parameters
+def needs_moving!  
+   if left_col_val && right_col_val && !self.class.in_tree_load?
     @prev_left = left_col_val
     self.left_col_val = nil
     @prev_right = right_col_val
     self.right_col_val = nil
+    @needs_moving = true
    end  
 end 
  
@@ -396,12 +440,25 @@ end
 
 private
 
-
+# calculate the left and right based on the parent and the siblings
+def calc_lft_and_rgt
+far_left =  furthrest_left
+   far_right = furthrest_right
+   gap = far_right - far_left
+  if  @children.size>0 
+     self.left_col_val = far_left + gap/4 
+     self.right_col_val = far_right - gap/4   
+  else    
+     self.left_col_val = self.right_col_val = far_left+(gap/self.class.bias)       
+  end
+end
+  
 def furthrest_left
    lft_gap.left_col_val 
 end
 
 def furthrest_right
+  #puts 'in furthrest_right '
   rgt_gap.right_col_val 
 end 
 
@@ -412,14 +469,15 @@ def build_tree_by_recursion(parent,depth,ar_results)
  while ar_results.size > 0 && ar_results.last.depth.to_i >= depth
      if ar_results.last.depth.to_i == depth 
         current_record = ar_results.pop
-       # puts "curr record in tree =#{current_record.in_tree} parent in tree = #{parent.in_tree}"
+      #  puts "curr record in tree =#{current_record.id} parent in tree = #{parent.id}"
         parent.children << current_record
-        current_record.in_tree = false
+        #current_record.in_tree = false
+     #   puts " child added #{parent.children.include?(current_record)}"
       #  puts "+++"
      elsif ar_results.last.depth.to_i == (depth + 1) 
-        current_record.in_tree = true
+       # current_record.in_tree = true
         build_tree_by_recursion(current_record,ar_results.last.depth.to_i,ar_results)
-        current_record.in_tree = false
+       # current_record.in_tree = false
      elsif ar_results.last.depth.to_i > (depth + 1)  
        raise "badly formed nested set result set"          
      end
